@@ -26,10 +26,17 @@ TabBook::TabBook(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose,true);
 
     DataBook=new databook();
+#ifdef Q_OS_HAIKU
+	m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+    QDir appDir(qApp->applicationDirPath());
+    appDir.cd(".");
+    m_pathApp=  appDir.absolutePath()+"/data";
+#else
      m_pathUser=QDir::homePath()+"/.kirtasse";
     QDir appDir(qApp->applicationDirPath());
     appDir.cdUp();
     m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
+#endif
     txtBrowserBook = new QTextBrowser(this);
     treeViewFahras =new QTreeWidget;
 
@@ -52,20 +59,24 @@ TabBook::~TabBook()
 void TabBook::loadSettings()
 {
     //--------------------------------------------------------------------
+#ifdef Q_OS_HAIKU
+    QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
+#else
     QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
+#endif
     settings.beginGroup("MainWindow");
     bool isCadre=settings.value("WebCadre",true).toBool();
     QString cadreFolder=settings.value("CadrFolder","default").toString();
     m_pathCostm=settings.value("pathCostm",m_pathUser+"/books").toString();
-#ifdef  Q_WS_X11
 
+#ifdef  Q_OS_X11
     m_WebFontTitle=settings.value("fontTitle","KacstTitle").toString();
     m_WebFontHachia=settings.value("fontHachia","KacstBook").toString();
 #else
-
     m_WebFontTitle=settings.value("fontTitle","Andalus").toString();
     m_WebFontHachia=settings.value("fontHachia","Traditional Arabic").toString();
 #endif
+
     QFont font;
     font.fromString(settings.value("font",trUtf8("Traditional Arabic,20,-1,5,50,0,0,0,0,0")).toString());
 
@@ -103,10 +114,16 @@ void TabBook::ceatCadre(const QString &cadreFolder, bool isCadre)
          txtBrowserBook->setFrameShape(QFrame::Panel);
          return;
     }
-        QDir appDir(qApp->applicationDirPath());
+	QDir appDir(qApp->applicationDirPath());
+#ifdef Q_OS_HAIKU
+    appDir.cd(".");
+    m_pathApp=  appDir.absolutePath()+"/data";
+    QString imgPath=m_pathApp+"/images/"+cadreFolder;
+#else
     appDir.cdUp();
     m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     QString imgPath=m_pathApp+"/data/images/"+cadreFolder;
+#endif
     if(cadreFolder==trUtf8("الافتراضي")){
         imgPath=":/images/image";
     }else{

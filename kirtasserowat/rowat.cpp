@@ -46,9 +46,13 @@ QString textRowat;
   //   QFile file(QCoreApplication::applicationDirPath() +"/data/rowaInfo.xml");
 
      QDir appDir(qApp->applicationDirPath());
+#if defined(Q_OS_HAIKU)
+	appDir.cd(".");
+	appPath=  appDir.absolutePath()+"/data/rowaInfo.xml";
+#else
      appDir.cdUp();
      QFile file ( appDir.absolutePath()+"/share/elkirtasse/data/rowaInfo.xml");
-
+#endif
      if(!file.open(QIODevice::ReadOnly)) return;
      view->clear();
      QXmlStreamReader xml;
@@ -120,8 +124,13 @@ textRowat.replace("W",trUtf8("صلى الله عليه وسلم"));
 
      //QFile file(QCoreApplication::applicationDirPath() +"/data/rowaInfo.xml");
      QDir appDir(qApp->applicationDirPath());
+#if defined(Q_OS_HAIKU)
+	appDir.cd(".");
+	appPath=  appDir.absolutePath()+"/data/rowaInfo.xml";
+#else
      appDir.cdUp();
      QFile file ( appDir.absolutePath()+"/share/elkirtasse/data/rowaInfo.xml");
+#endif
      if(!file.open(QIODevice::ReadOnly)) return false;
 
      if (!docRowat.setContent(&file)) {
@@ -161,9 +170,13 @@ QString rowat::readxml(int pos)
     QXmlStreamReader xml;
 //    QFile filex(QCoreApplication::applicationDirPath() +"/data/rowaInfo.xml");
     QDir appDir(qApp->applicationDirPath());
+#if defined(Q_OS_HAIKU)
+	appDir.cd(".");
+	appPath=  appDir.absolutePath()+"/data/rowaInfo.xml";
+#else
     appDir.cdUp();
     QFile filex ( appDir.absolutePath()+"/share/elkirtasse/data/rowaInfo.xml");
-
+#endif
     int counter=0;
 
      if(!filex.open(QIODevice::ReadOnly)) return "" ;

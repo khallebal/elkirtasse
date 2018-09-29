@@ -28,9 +28,12 @@
 ****************************************************************************/
 #ifndef DATABOOK_H
 #define DATABOOK_H
+
+#include <QTreeWidget>
 #include <QObject>
 #include <QDomDocument>
 #include <QtGui>
+#include <QStackedWidget>
 
 /**
  * @brief The databook class قاعدة التعامل مع بيانات الكتاب

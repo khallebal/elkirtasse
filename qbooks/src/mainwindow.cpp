@@ -40,7 +40,7 @@
 #include  "dialogfavo.h"
 #include  "dialogconfigbooks.h"
 #include  "dialogactions.h"
-#ifdef   Q_WS_WIN
+#ifdef   Q_OS_WIN
 #include  "dialogmdb.h"
 #else
 #include  "mdbexport.h"
@@ -49,6 +49,8 @@
 #include  "dialogoption.h"
 #include  "print.h"
 #include "dialogimportdvd.h"
+
+#include <QMessageBox>
 
 #define NET_PLUG 0
 #define SHAMILA_PLUG 1
@@ -72,11 +74,14 @@ MainWindow::MainWindow(QWidget *parent)
     view= new View(this);
 #endif
 
-    m_pathUser=QDir::homePath()+"/.kirtasse";
     QDir appDir(qApp->applicationDirPath());
+#ifdef Q_OS_HAIKU
+	appDir.cd(".");
+	m_pathApp=  appDir.absolutePath()+"/data";
+#else
     appDir.cdUp();
     m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-
+#endif
 
     m_treeGroupIsModified=false;
 
@@ -351,7 +356,6 @@ void MainWindow::updateIconEndAction()
     AC_prevHistorie->setEnabled(false);
     AC_nextHistorie->setEnabled(false);
 
-#if QT_VERSION >= 0x040600
     view->setTreeViw(ui->treeWidget_books);
     //view->lineEdit=ui->lineEdit;
     connect(view,SIGNAL(openBook(QString,QString,QString,int)),
@@ -360,7 +364,7 @@ void MainWindow::updateIconEndAction()
     connect(view,SIGNAL(labelInfoChanged(QString)),labelAnim,SLOT(setText(QString)));
     view->init();
     ui->horizontalLayout_7->addWidget(view);
-#endif
+
       /////////////////عناصر شجرة الكتب
     QLineEdit *lineEditFind = new QLineEdit(this);
     ui->toolBarBooks->insertWidget(ui->actionFindBkOrHt,lineEditFind);
@@ -825,7 +829,7 @@ void MainWindow::on_action_import_triggered()//استراد ملفات نصية
 void MainWindow::on_actionMdb_triggered()
 {
 
-#ifdef   Q_WS_WIN
+#ifdef   Q_OS_WIN
     Dialogmdb *dlg=new Dialogmdb(this);
     dlg->m_path=m_pathCostm;
     if ( dlg->exec() == QDialog::Accepted ){
@@ -895,7 +899,7 @@ void MainWindow::on_actionArchive_triggered()
     progress.setEnabled(false);
     progress.show();
     qApp->processEvents();
-#ifdef   Q_WS_WIN
+#ifdef   Q_OS_WIN
     prosses.setWorkingDirectory(QApplication::applicationDirPath());
     QString setTar="\""+ QDir::homePath()+"/"+title+".tar\"";
     QString setGz="\""+ QDir::homePath()+"/"+title+".tar.gz\"";
@@ -1987,9 +1991,13 @@ void MainWindow::chargeGroupe()//تحميل شجرة الكتب
 
 void MainWindow::saveLayou()//حفظ البيانات الى ملف
 {
+#ifdef Q_OS_HAIKU
+	QSettings settings(m_pathUser+"/setting.ini",
+                       QSettings::IniFormat);
+#else
     QSettings settings(m_pathUser+"/data/setting.ini",
                        QSettings::IniFormat);
-
+#endif
     settings.beginGroup("MainWindow");
 
     settings.setValue("geo_data", saveGeometry());
@@ -2014,8 +2022,11 @@ void MainWindow::loadLayout()//load layou
                                              "01000000020000000300000016006d00610069006e0054006f006f006c0042006100720100000000ffffffff00000000000000000000"
                                              "00220074006f006f006c004200610072005f006e006100760065006700610074006f00720100000203ffffffff000000000000000000"
                                              "00001a0074006f006f006c0042006100720072006500630065006e007401000002a9ffffffff0000000000000000)");
+#ifdef Q_OS_HAIKU
+	QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
+#else
     QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
-
+#endif
     settings.beginGroup("MainWindow");
 
     this->restoreGeometry(settings.value("geo_data").toByteArray());
@@ -2028,9 +2039,11 @@ void MainWindow::loadLayout()//load layou
 void MainWindow::loadSettings()
 {
 
-
+#ifdef Q_OS_HAIKU
+	QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
+#else
     QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
-
+#endif
     settings.beginGroup("MainWindow");
 
     QString   m_myStyleName=settings.value("style","").toString();
@@ -2463,8 +2476,11 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
     QString targzName= netInterface->loadFile(idurl);
     if (targzName.isEmpty())
         return;
-
+#ifdef Q_OS_HAIKU
+    QString orgPath=QDir::homePath()+"/config/settings/elkirtasse/download/"+targzName;
+#else
     QString orgPath=QDir::homePath()+"/.kirtasse/download/"+targzName;
+#endif
 
     QFile filex;
     if(!filex.exists(orgPath)){
@@ -2475,11 +2491,17 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
         return;
 
     QString distPath;
-    if(file.exists(QDir::homePath()+"/.kirtasse/download/"+name+"/bookinfo.info")){
-       distPath=QDir::homePath()+"/.kirtasse/download/"+name;
+#ifdef Q_OS_HAIKU
+	QString dwnldPath=QDir::homePath()+"/config/settings/elkirtasse/download/";
+#else
+	QString dwnldPath=QDir::homePath()+"/.kirtasse/download/";
+#endif
+
+    if(file.exists(QDir::homePath()+dwnldPath+name+"/bookinfo.info")){
+       distPath=QDir::homePath()+dwnldPath+name;
        qDebug()<<"distPath-------EXist-------------------------------"<<distPath;
-    }else if(file.exists(QDir::homePath()+"/.kirtasse/download/bookinfo.info")){
-          distPath=QDir::homePath()+"/.kirtasse/download/";
+     }else if(file.exists(QDir::homePath()+dwnldPath+"/bookinfo.info")){
+           distPath=QDir::homePath()+dwnldPath;
           qDebug()<<"distPath-------EXist-------------------------------"<<distPath;
     }else{
         qDebug()<<"distPath-------NON EXist-------------------------------";
@@ -2496,8 +2518,15 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
     }
     if(filex.exists(m_pathCostm+ "/" + name+"/book.xml"))
         QMessageBox::information(this,"",trUtf8("تمت العملية بنجاح \n")+m_pathCostm + "/" + name);
+#ifdef Q_OS_HAIKU
+	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
+    m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+#else
+	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
+	m_pathUser=QDir::homePath()+"/.kirtasse";
+#endif
 
-    Utils::removeTempDirs(QDir::homePath()+"/.kirtasse/download");
+    Utils::removeTempDirs(QDir::homePath()+tempDirs);
 
     open_dataBase(name,item->text(0),item->text(1),0);
 }
@@ -2515,8 +2544,11 @@ void MainWindow::on_actionDownloadBooks_triggered()
  qDebug()<<"recevier -------------------------------------"<<targzName;
        if (targzName.isEmpty())
         return;
-
-    QString tarGzPath=QDir::homePath()+"/.kirtasse/download/"+targzName;
+#ifdef Q_OS_HAIKU
+    QString tarGzPath=QDir::homePath()+"/config/settings/download/"+targzName;
+#else
+	QString tarGzPath=QDir::homePath()+"/.kirtasse/download/"+targzName;
+#endif
     qDebug()<<"chemain download + targz nam----------------------------"<<tarGzPath;
 
     QFile file;
@@ -2533,11 +2565,17 @@ void MainWindow::on_actionDownloadBooks_triggered()
 
      QString name=targzName.remove(".tar.gz");
      QString distPath;
-     if(file.exists(QDir::homePath()+"/.kirtasse/download/"+name+"/bookinfo.info")){
-        distPath=QDir::homePath()+"/.kirtasse/download/"+name;
+#ifdef Q_OS_HAIKU
+	QString dwnldPath=QDir::homePath()+"/config/settings/elkirtasse/download/";
+#else
+	QString dwnldPath=QDir::homePath()+"/.kirtasse/download/";
+#endif
+
+     if(file.exists(QDir::homePath()+dwnldPath+name+"/bookinfo.info")){
+        distPath=QDir::homePath()+dwnldPath+name;
         qDebug()<<"distPath-------EXist-------------------------------"<<distPath;
-     }else if(file.exists(QDir::homePath()+"/.kirtasse/download/bookinfo.info")){
-           distPath=QDir::homePath()+"/.kirtasse/download/";
+     }else if(file.exists(QDir::homePath()+dwnldPath+"/bookinfo.info")){
+           distPath=QDir::homePath()+dwnldPath;
            qDebug()<<"distPath-------EXist-------------------------------"<<distPath;
      }else{
          qDebug()<<"distPath-------NON EXist-------------------------------";
@@ -2563,7 +2601,15 @@ void MainWindow::on_actionDownloadBooks_triggered()
         if(file.exists(m_pathCostm+ "/" + name+"/book.xml"))
             QMessageBox::information(this,"",trUtf8("تمت العملية بنجاح \n")+m_pathCostm + "/" + name);
 
-        Utils::removeTempDirs(QDir::homePath()+"/.kirtasse/download");
+#ifdef Q_OS_HAIKU
+	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
+    m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+#else
+	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
+	m_pathUser=QDir::homePath()+"/.kirtasse";
+#endif
+
+        Utils::removeTempDirs(QDir::homePath()+tempDirs);
         QTreeWidgetItem *item=Utils::getItemByBook(ui->treeWidget_books,name);
         if(item)
          open_dataBase(name,item->text(0),item->text(1),0);
@@ -2583,9 +2629,9 @@ void MainWindow::on_actionDownloadBooks_triggered()
     dlgc->recharge();
     if ( dlgc->exec() == QDialog::Accepted ){
         chargeGroupe();
-        Utils::removeTempDirs(QDir::homePath()+"/.kirtasse/download");
+        Utils::removeTempDirs(QDir::homePath()+tempDirs);
     }else{
-        Utils::removeTempDirs(QDir::homePath()+"/.kirtasse/download");
+        Utils::removeTempDirs(QDir::homePath()+tempDirs);
     }
 
     delete dlgc;
@@ -2594,19 +2640,33 @@ void MainWindow::on_actionDownloadBooks_triggered()
 
 void MainWindow::on_actionShamilaCdrom_triggered()
 {
-    Utils::removeTempDirs(QDir::homePath()+"/.kirtasse/temp");
+#ifdef Q_OS_HAIKU
+	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
+    m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+#else
+	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
+	m_pathUser=QDir::homePath()+"/.kirtasse";
+#endif
+
+	Utils::removeTempDirs(QDir::homePath()+tempDirs);
+
     if(loadPlugin(SHAMILA_PLUG)==false)
         return;
     QString newBooksPath= shamilaInterface->execPlugin();
 
     if(newBooksPath.isEmpty())
         return;
-
-    QMessageBox::information(this,trUtf8("معلومات"),trUtf8("لقد تم تحويل كتب الشاملة بنجاح\n"
-                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها"
-                                                           )+QDir::homePath()+trUtf8("/.kirtasse/data/group.xml.old\n"
+#ifdef Q_OS_HAIKU
+		QMessageBox::information(this,trUtf8("معلومات"),trUtf8("لقد تم تحويل كتب الشاملة بنجاح\n"
+                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها")+QDir::homePath()+trUtf8("/config/settings/elkirtasse/data/group.xml.old\n"
                                                                                      " كما سيتم استخدام المسار التالي للكتب \n"
                                                                                      )+newBooksPath);
+#else
+	QMessageBox::information(this,trUtf8("معلومات"),trUtf8("لقد تم تحويل كتب الشاملة بنجاح\n"
+                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها")+QDir::homePath()+trUtf8("/.kirtasse/data/group.xml.old\n"
+                                                                                     " كما سيتم استخدام المسار التالي للكتب \n"
+                                                                                     )+newBooksPath);
+#endif
 
     m_pathCostm=newBooksPath;
     chargeGroupe();

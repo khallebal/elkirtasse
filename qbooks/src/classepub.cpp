@@ -20,11 +20,14 @@ classepub::classepub()
 bool classepub::ebubUnzip(QString fileName)
 {
   //  QDir::homePath()+"/.kirtasse/download"
-    QDir dir;
-
-               QString pathToExtract=QDir::homePath()+"/.kirtasse/download/epub";
-   dir.mkdir(pathToExtract);
-  QProcess prosses;
+	QDir dir;
+#ifdef Q_OS_HAIKU
+	QString pathToExtract=QDir::homePath()+"/config/settings/elkirtasse/download/epub";
+#else
+	QString pathToExtract=QDir::homePath()+"/.kirtasse/download/epub";
+#endif
+	dir.mkdir(pathToExtract);
+	QProcess prosses;
 
     if (dir.exists(pathToExtract)) //التاكد من وجود مجلد المؤقت
     {
@@ -36,6 +39,19 @@ bool classepub::ebubUnzip(QString fileName)
    //dir.mkdir(pathToExtract);
 
 //     prosses.execute("unzip  \""+fileName+"\" -d  "+pathToExtract);
+#ifdef Q_OS_HAIKU
+    if(QFile::exists("/bin/7z")){
+         prosses.execute("7z x  \""+fileName+"\" -o"+pathToExtract);
+    }else if(QFile::exists("/bin/unzip")){
+       prosses.execute("unzip  \""+fileName+"\" -d  "+pathToExtract);
+    }else{
+        QMessageBox::information(0,"","please install 7z or unzip ");
+    }
+    prosses.waitForFinished();
+
+    ebubOpenContainer(QDir::homePath()+"/config/settings/elkirtasse/download/epub");
+    curentPage=1;
+#else
     if(QFile::exists("/usr/bin/7z")){
          prosses.execute("7z x  \""+fileName+"\" -o"+pathToExtract);
     }else if(QFile::exists("/usr/bin/unzip")){
@@ -43,14 +59,13 @@ bool classepub::ebubUnzip(QString fileName)
     }else{
         QMessageBox::information(0,"","please install 7z or unzip ");
     }
-
-
-
     prosses.waitForFinished();
+
     ebubOpenContainer(QDir::homePath()+"/.kirtasse/download/epub");
     curentPage=1;
 
     return true;
+#endif
 }
 
  QString classepub::setPage(int page)
@@ -224,7 +239,11 @@ QString  tocName;
     QDomElement racine2 = m_doc.documentElement(); //
     int count=racine2.childNodes().count();
 //---------------------------------
-    QFile fileX(QDir::homePath()+"/.kirtasse/download/book.xml");
+#ifdef Q_OS_HAIKU
+    QFile fileX(QDir::homePath()+"/config/settings/elkirtasse/download/book.xml");
+#else
+	QFile fileX(QDir::homePath()+"/.kirtasse/download/book.xml");
+#endif
     if (!fileX.open(QFile::WriteOnly | QFile::Text)) {
         return ;
     }
@@ -458,8 +477,11 @@ int count=    item.childNodes().count();
 
 void classepub::epubCreatIndex()
 {
-
+#ifdef Q_OS_HAIKU
+    QFile fileX(QDir::homePath()+"/config/settings/elkirtasse/download/title.xml");
+#else
     QFile fileX(QDir::homePath()+"/.kirtasse/download/title.xml");
+#endif
     if (!fileX.open(QFile::WriteOnly | QFile::Text)) {
         return ;
     }

@@ -28,16 +28,15 @@
 ****************************************************************************/
 #ifndef DIALOGNET_H
 #define DIALOGNET_H
+//#include <QHttp>
+//#include <QtNetwork>
 
-#include <QDialog>
 #include <QTreeWidget>
 #include <QProgressDialog>
-//#include <QHttp>
 #include <QFile>
-// #include <QtNetwork>
- #include <QAbstractButton>
-
- #include <QProcess>
+#include <QAbstractButton>
+#include <QDialog>
+#include <QProcess>
 
 namespace Ui {
     class Dialognet;

@@ -35,6 +35,15 @@
 #include <QDomDocument>
 #include <QMessageBox>
 #include<QtGui>
+
+#ifdef Q_OS_HAIKU
+	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
+	QString tempFile=QDir::homePath()+"/config/settings/elkirtasse/download/";
+#else
+	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
+	QString tempFile=QDir::homePath()+"/.kirtasse/download/";
+#endif
+
 DialogAddBooks::DialogAddBooks(QWidget *parent)
     : QDialog(parent), ui(new Ui::DialogAddBooks)
 {
@@ -49,12 +58,12 @@ DialogAddBooks::DialogAddBooks(QWidget *parent)
 
 
  Utils::comboCharge(ui->comboBox_group);
-Utils::removeTempDirs(QDir::homePath()+"/.kirtasse/download/");
+Utils::removeTempDirs(QDir::homePath()+tempDirs);
 }
 
 DialogAddBooks::~DialogAddBooks()
 {
-Utils::removeTempDirs(QDir::homePath()+"/.kirtasse/download/");
+Utils::removeTempDirs(QDir::homePath()+tempDirs);
 }
 
 
@@ -98,20 +107,20 @@ void DialogAddBooks::on_buttonBox_clicked(QAbstractButton* button)
             //   Utils::removeTempDirs(QDir::homePath()+"/.kirtasse/download/");
                 if(Utils::loadTarGz(filname)==true){
 
-                    QString tempFile=QDir::homePath()+"/.kirtasse/download";
+                    //QString tempFile=QDir::homePath()+"/.kirtasse/download";
                     loadBookInfo(tempFile);
                     if (copyDir(tempFile,countItem)==true)
                         msgTitle=msgTitle+"\n"+Add_Book_Title+"\n"+m_newPathDir;
                     //  archiveDir="";
                 }
             } else if(ext.toLower()==("epub")){
-               Utils::removeTempDirs(QDir::homePath()+"/.kirtasse/download/");
+               Utils::removeTempDirs(QDir::homePath()+tempDirs);
               classepub  *Classepub=new classepub;
                   if  (Classepub->ebubUnzip(filname)==true) {
                       Add_Book_Title=Classepub->infoBookTitle;
                       Add_Autor_Name=Classepub->infoBookAutor;
                       Add_Betaka=Classepub->infoBookBetaka;
-                    QString tempFile=QDir::homePath()+"/.kirtasse/download/";
+                    //QString tempFile=QDir::homePath()+"/.kirtasse/download/";
                       if (copyDir(tempFile,countItem)==true)
                           msgTitle=msgTitle+"\n"+Add_Book_Title+"\n"+m_newPathDir;
                  }
@@ -140,7 +149,7 @@ void DialogAddBooks::on_buttonBox_clicked(QAbstractButton* button)
             msgBox.setWindowTitle(trUtf8("تعليمات"));
             msgBox.setStandardButtons(QMessageBox::Ok);
             msgBox.exec();
-       Utils:: removeTempDirs(QDir::homePath()+"/.kirtasse/download/");
+       Utils:: removeTempDirs(QDir::homePath()+tempDirs);
             qApp->processEvents();
 
             this->accept();
@@ -256,7 +265,7 @@ void DialogAddBooks::loadBookInfo(QString path)
 {
     //    ui->lineEdit_fileNam->setText(path);
     if (  Utils::chekBookInfo(path)==false) {
-     Utils::removeTempDirs(QDir::homePath()+"/.kirtasse/download/");
+     Utils::removeTempDirs(QDir::homePath()+tempDirs);
         QMessageBox::information(this,"info.xml","this info.xml no valid");
         return;
     }
@@ -307,7 +316,7 @@ void DialogAddBooks::on_toolButtonInfo_clicked()
 
    if (path.contains(".tar.gz")||path.contains(".Krts")){
 
-       #ifdef   Q_WS_WIN
+       #ifdef   Q_OS_WIN
        QMessageBox::information(this,trUtf8("معلومات الكتاب"),
                                 trUtf8("الكتاب حزمة مضغوطة"));
         return ;

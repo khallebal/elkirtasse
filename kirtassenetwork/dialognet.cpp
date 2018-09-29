@@ -29,6 +29,7 @@
 #include "dialognet.h"
 #include "ui_dialognet.h"
 #include <QXmlStreamReader>
+#include <QMessageBox>
 #include <QtGui>
 #include <QDomDocument>
 class QSslError;
@@ -56,7 +57,11 @@ Dialognet::Dialognet( const QString &urlfile, QWidget *parent) :
     m_urlFile=urlfile;
 
     process=new QProcess;
+#ifdef Q_OS_HAIKU
+    downloadFile(urlfile,QDir::homePath()+"/config/settings/elkirtasse/download/");
+#else
     downloadFile(urlfile,QDir::homePath()+"/.kirtasse/download/");
+#endif
 }
 
 void Dialognet::init()
@@ -69,9 +74,11 @@ void Dialognet::init()
 void Dialognet::loadSettings()//load layou
 {
 
-
-QString m_pathUser=QDir::homePath()+"/.kirtasse/data";
-
+#ifdef Q_OS_HAIKU
+    QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+#else
+	QString m_pathUser=QDir::homePath()+"/.kirtasse/data";
+#endif
     QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
 
     //****************************
@@ -99,9 +106,13 @@ QStringList Dialognet::getListUrls()
 }
 void Dialognet::saveSettings()//حفظ البيانات الى ملف
 {
+#ifdef Q_OS_HAIKU
+    QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+#else
     QString m_pathUser=QDir::homePath()+"/.kirtasse/data";
+#endif
     QSettings settings(m_pathUser+"/setting.ini",
-                       QSettings::IniFormat);
+						QSettings::IniFormat);
     // QSettings settings("Kirtasse", "setting");
     settings.beginGroup("NetUrls");
 
@@ -130,9 +141,11 @@ void Dialognet::changeEvent(QEvent *e)
 
 void Dialognet::treeChargeGroupe(QTreeWidget *view,int checked)
 {
-
+#ifdef Q_OS_HAIKU
+    QString path=QDir::homePath()+"/config/settings/elkirtasse";
+#else
     QString path=QDir::homePath()+"/.kirtasse";
-
+#endif
 
     QFile file(path+"/data/bookslist.xml");
     if(!file.exists()){
@@ -212,13 +225,22 @@ void Dialognet::treeChargeGroupe(QTreeWidget *view,int checked)
 void Dialognet::on_toolButtonGetList_clicked()
 {
     isDownlist=true;
+#ifdef Q_OS_HAIKU
+    if (QFile::exists(QDir::homePath()+"/config/settings/elkirtasse/data/bookslist.xml-old"))
+            QFile::remove(QDir::homePath()+"/config/settings/elkirtasse/data/bookslist.xml-old");
+
+    QFile::rename(QDir::homePath()+"/config/settings/elkirtasse/data/bookslist.xml",
+			QDir::homePath()+"/config/settings/elkirtasse/data/bookslist.xml-old");
+
+    downloadFile(ui->comboBoxUrls->currentText(),QDir::homePath()+"/config/settings/elkirtasse/data/");
+#else
     if (QFile::exists(QDir::homePath()+"/.kirtasse/data/bookslist.xml-old"))
             QFile::remove(QDir::homePath()+"/.kirtasse/data/bookslist.xml-old");
 
     QFile::rename(QDir::homePath()+"/.kirtasse/data/bookslist.xml",QDir::homePath()+"/.kirtasse/data/bookslist.xml-old");
 
     downloadFile(ui->comboBoxUrls->currentText(),QDir::homePath()+"/.kirtasse/data/");
-
+#endif
 
 
 }
@@ -262,9 +284,13 @@ void Dialognet::on_toolButtonGetList_clicked()
 void Dialognet::processHasFinished(int /*index*/)
 {
  if  (isDownlist==true){
+#ifdef Q_OS_HAIKU
+     if(QFile::exists(QDir::homePath()+"/config/settings/elkirtasse/data/bookslist.xml"))
+         QFile::rename(QDir::homePath()+"/config/settings/elkirtasse/data/bookslist.xml-old",QDir::homePath()+"/.kirtasse/data/bookslist.xml");
+#else
      if(QFile::exists(QDir::homePath()+"/.kirtasse/data/bookslist.xml"))
          QFile::rename(QDir::homePath()+"/.kirtasse/data/bookslist.xml-old",QDir::homePath()+"/.kirtasse/data/bookslist.xml");
-
+#endif
      isDownlist=false;
      ui->stackedWidget->setCurrentIndex(0);
      saveSettings();
@@ -276,11 +302,17 @@ void Dialognet::processHasFinished(int /*index*/)
     QString fileName = QFileInfo(QUrl(m_urlFile).path()).fileName();
     tagzName=fileName;
 
-
+#ifdef Q_OS_HAIKU
+    if(!QFile::exists(QDir::homePath()+"/config/settings/elkirtasse/download/"+tagzName)){
+              QMessageBox::information(0, tr("HTTP"),
+                                       tr("Download failed: %1.")
+                                       .arg(m_urlFile));
+#else
     if(!QFile::exists(QDir::homePath()+"/.kirtasse/download/"+tagzName)){
               QMessageBox::information(0, tr("HTTP"),
                                        tr("Download failed: %1.")
                                        .arg(m_urlFile));
+#endif
          //      this->reject();
           //    return;
 }
@@ -428,7 +460,12 @@ searchInTreeview(ui->treeWidget,searchString,0);
 void Dialognet::on_buttonBox_clicked(QAbstractButton *button)
 {
     if(ui->buttonBox->standardButton(button)==QDialogButtonBox::Ok){
+
+#ifdef Q_OS_HAIKU
+		QString h=QDir::homePath()+"/config/settings/elkirtasse/download/";
+#else
         QString h=QDir::homePath()+"/.kirtasse/download/";
+#endif
         QDir dir;
         if (!dir.exists(h))
             dir.mkdir( h);

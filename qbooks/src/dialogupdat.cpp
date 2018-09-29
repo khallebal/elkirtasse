@@ -74,7 +74,11 @@ void dialogupdat::on_buttonBox_accepted()
         updateBook();
 
     }else if (creatNewBook=="add"){
-        if (copyDir(QDir::homePath()+"/.kirtasse/download")==false)
+#ifdef Q_OS_HAIKU
+        if (copyDir(QDir::homePath()+"/config/settings/elkirtasse/download")==false)
+#else
+		if (copyDir(QDir::homePath()+"/.kirtasse/download")==false)
+#endif
             return;
         updateBook();
 

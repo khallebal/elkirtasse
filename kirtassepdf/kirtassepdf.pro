@@ -9,6 +9,7 @@ TARGET = $$qtLibraryTarget(kirtassepdf)
 DESTDIR = ../usr/share/elkirtasse/plugins
 HEADERS += pdfwidget.h
 
+QT += widgets
 SOURCES += pdfwidget.cpp \
 
 # install

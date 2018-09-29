@@ -8,7 +8,7 @@ HEADERS += networkplugin.h \
     dialognet.h
 SOURCES += networkplugin.cpp \
     dialognet.cpp
-QT += xml
+QT += xml widgets
 FORMS += dialognet.ui
 # install
 KDIR = mkdir -p /usr/share/elkirtasse/plugins

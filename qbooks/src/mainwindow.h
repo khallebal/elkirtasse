@@ -28,16 +28,16 @@
 ****************************************************************************/
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
 #include "tabbook.h"
 #include "recentbooks.h"
 #include "findbook.h"
 #include "booksInterface.h"
 #include "toolrubon.h"
-#if QT_VERSION >= 0x040600
 #include "animation.h"
-#endif
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
+#include <QPrinter>
 
 class QLabel;
 class QTreeWidget;

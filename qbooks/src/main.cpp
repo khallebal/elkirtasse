@@ -26,12 +26,12 @@
 ** $elkirtasse_END_LICENSE$
 **
 ****************************************************************************/
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "mainwindow.h"
 #include "booksInterface.h"
-// #include <QSplashScreen>
- #include <QTranslator>
- #include <QLocale>
+#include <QSplashScreen>
+#include <QTranslator>
+#include <QLocale>
 #include <QFontDatabase>
 
 
@@ -51,7 +51,24 @@ int main(int argc, char *argv[])
     a.processEvents();
     QDir dir;
     QString h=dir.homePath();
-
+#ifdef Q_OS_HAIKU
+    if (!dir.exists(h+"/config/settings/elkirtasse")) //التاكد من وجود مجلد المكتبة
+    {
+        dir.mkdir( h+"/config/settings/elkirtasse");
+    }
+    if (!dir.exists(h+"/config/settings/elkirtasse/data")) //التاكد من وجود مجلد البياات
+    {
+        dir.mkdir( h+"/config/settings/elkirtasse/data");
+    }
+    if (!dir.exists(h+"/config/settings/elkirtasse/books")) //التاكد من وجود مجلد الكتاب
+    {
+        dir.mkdir( h+"/config/settings/elkirtasse/books");
+    }
+    if (!dir.exists(h+"/config/settings/elkirtasse/download")) //التاكد من وجود مجلد مؤقت
+    {
+        dir.mkdir( h+"/config/settings/elkirtasse/download");
+	}
+#else
     if (!dir.exists(h+"/.kirtasse")) //التاكد من وجود مجلد المكتبة
     {
         dir.mkdir( h+"/.kirtasse");
@@ -67,14 +84,24 @@ int main(int argc, char *argv[])
     if (!dir.exists(h+"/.kirtasse/download")) //التاكد من وجود مجلد مؤقت
     {
         dir.mkdir( h+"/.kirtasse/download");
-
-    }
+	}
+#endif
 //    if (!dir.exists(h+"/.fonts")) //التاكد من وجود مجلد مؤقت
 //    {
 //        dir.mkdir( h+"/.fonts");
 //    }
     QFile file;
     QDir appDir(QCoreApplication::applicationDirPath() );
+#ifdef Q_OS_HAIKU
+	appDir.cd(".");
+	QString pathApp=  appDir.absolutePath()+"/data";
+	if (!file.exists(h+"/config/settings/elkirtasse/data/group.xml")){
+        file.copy(pathApp+"/data/group.xml",h +"/config/settings/elkirtasse/data/group.xml");
+    }
+    if (!file.exists(h+"/config/settings/elkirtasse/data/bookslist.xml")){
+        file.copy(pathApp+"/data/bookslist.xml",h +"/config/settings/elkirtasse/data/bookslist.xml");
+    }
+#else
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     if (!file.exists(h+"/.kirtasse/data/group.xml")){
@@ -83,6 +110,7 @@ int main(int argc, char *argv[])
     if (!file.exists(h+"/.kirtasse/data/bookslist.xml")){
         file.copy(pathApp+"/data/bookslist.xml",h +"/.kirtasse/data/bookslist.xml");
     }
+#endif
 //    if (!file.exists(h+"/.fonts/trado.ttf")){
 //        file.copy(pathApp+"/data/font/trado.ttf",h +"/.fonts/trado.ttf");
 //    }
@@ -97,8 +125,11 @@ int main(int argc, char *argv[])
     QTranslator *translatorsys = new QTranslator(&a);
     if (translatorsys->load(translatorFileName, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         a.installTranslator(translatorsys);
-
-    QSettings settings(h+"/.kirtasse/data/setting.ini",QSettings::IniFormat);
+#ifdef Q_OS_HAIKU
+    QSettings settings(h+"/config/settings/elkirtasse/setting.ini",QSettings::IniFormat);
+#else
+	QSettings settings(h+"/.kirtasse/data/setting.ini",QSettings::IniFormat);
+#endif
     settings.beginGroup("MainWindow");
     int lng=settings.value("lng",0).toInt();
 
@@ -114,10 +145,8 @@ int main(int argc, char *argv[])
         translator.load(QString(pathApp+"/translat/kirtasse_en") );
     }else if(lng==4){
         translator.load(QString(pathApp+"/translat/kirtasse_fr") );
-    }
-
+	}
     a.installTranslator(&translator);
-
 
     MainWindow w;
     w.show();

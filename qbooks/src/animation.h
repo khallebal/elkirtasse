@@ -31,6 +31,7 @@
 
 #include <QtGui>
 #include <QObject>
+#include <QGraphicsWidget>
 
 /**
  * @brief The Pixmap class فئة خاصة بالايقونات التي تعرض في المشهد المتحرك

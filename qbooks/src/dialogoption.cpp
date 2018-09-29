@@ -40,8 +40,13 @@ Dialogoption::Dialogoption(QWidget *parent)
     //------------
     ui->comboBoxCadre->addItem(QIcon(":/images/image/top.png"),trUtf8("الافتراضي"));
     QDir appDir(qApp->applicationDirPath());
+#if defined(Q_OS_HAIKU)
+		appDir.cd(".");
+		QString pathApp=  appDir.absolutePath()+"/";
+#else
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
+#endif
     QDir dirImage(pathApp+"/data/images");
     QString subdir;
     foreach ( subdir, dirImage.entryList(QDir::AllDirs | QDir::NoDotAndDotDot |
@@ -60,10 +65,13 @@ void Dialogoption::loadSettings()//load layou
     //themesStyle ;fontName
     QStringList styles;
     styles << trUtf8("النظام") <<QStyleFactory::keys() ;
-    QString m_pathUser=QDir::homePath()+"/.kirtasse";
-
-    QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
-
+#ifdef Q_OS_HAIKU
+	QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+	QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
+#else
+	QString m_pathUser=QDir::homePath()+"/.kirtasse";
+	QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
+#endif
     //****************************
 
     settings.beginGroup("MainWindow");
@@ -79,7 +87,7 @@ void Dialogoption::loadSettings()//load layou
     QVariant fs=m_fontName.pointSize();
     ui->label_font->setText(  m_fontName.family()+" "+ fs.toString());
     //---------------------------------------
-#ifdef  Q_WS_X11
+#ifdef  Q_OS_X11
 
     ui->label_fontTitle->setText(settings.value("fontTitle","KacstTitle").toString());
     ui->label_fontHachia->setText(settings.value("fontHachia","KacstBook").toString());
@@ -159,9 +167,13 @@ void Dialogoption::loadSettings()//load layou
 
 void Dialogoption::saveSettings()//حفظ البيانات الى ملف
 {
+#ifdef Q_OS_HAIKU
+	QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+	QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
+#else
     QString m_pathUser=QDir::homePath()+"/.kirtasse/data";
-    QSettings settings(m_pathUser+"/setting.ini",
-                       QSettings::IniFormat);
+    QSettings settings(m_pathUser+"/setting.ini", QSettings::IniFormat);
+#endif
     // QSettings settings("Kirtasse", "setting");
     settings.beginGroup("MainWindow");
     settings.setValue("style", ui->comboBox->currentText());

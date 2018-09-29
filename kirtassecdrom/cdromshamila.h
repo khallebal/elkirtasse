@@ -31,7 +31,7 @@
 #include "src/booksInterface.h"
 #include <QDomDocument>
 #include <QList>
- #ifdef   Q_WS_WIN
+ #ifdef   Q_OS_WIN
 #include <QSqlDatabase>
  #endif
 
@@ -53,7 +53,7 @@ private:
     QString m_mdbExportConv;
     QDomDocument m_doc;
     QList<QString> listId;
-#ifdef   Q_WS_WIN
+#ifdef   Q_OS_WIN
     QSqlDatabase m_db;
 #endif
     int  tbcount;
@@ -66,7 +66,7 @@ private slots:
 
 
     bool creatShamellaX();
-#ifdef   Q_WS_WIN
+#ifdef   Q_OS_WIN
     bool creatShamellaWin();
     bool winCreatBooks();
     bool  winCreatgroupXml();

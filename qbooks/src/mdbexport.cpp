@@ -30,7 +30,10 @@
 #include "utils.h"
 #include<QtGui>
 #include <QTextStream>
+#include <QMessageBox>
+#include <QFileDialog>
 #include  "ui_mdbexport.h"
+
 mdbexport::mdbexport(QWidget *parent)
     : QDialog(parent), ui(new Ui::mdbexport)
 {
@@ -41,7 +44,11 @@ mdbexport::mdbexport(QWidget *parent)
 
     Utils::comboCharge(ui->comboBox);
     ui->progressBar->setVisible(false);
-    m_tempDir=QDir::homePath()+"/.kirtasse/temp";
+#ifdef Q_OS_HAIKU
+    m_tempDir=QDir::homePath()+"/config/settings/elkirtasse/temp";
+#else
+	m_tempDir=QDir::homePath()+"/.kirtasse/temp";
+#endif
     QProcess prosses;
     prosses.execute(QString("mkdir -p %1").arg("\""+m_tempDir+"\""));
 }

@@ -56,16 +56,17 @@ Print::~Print()
 void Print::loadSettings()
 {
     //m_WebFont ; m_WebFontTitle ;m_myStyleName ;
-
+#ifdef Q_OS_HAIKU
+    QSettings settings(QDir::homePath()+"/boot/home/config/settings/setting.ini",QSettings::IniFormat);
+#else
     QSettings settings(QDir::homePath()+"/.kirtasse//data/setting.ini",QSettings::IniFormat);
-
+#endif
     settings.beginGroup("MainWindow");
     m_WebFont=settings.value("font",trUtf8("Traditional Arabic,20,-1,5,50,0,0,0,0,0")).toString();
-#ifdef  Q_WS_X11
 
+#ifdef  Q_OS_X11
     m_WebFontTitle=settings.value("fontTitle","KacstTitle").toString();
 #else
-
     m_WebFontTitle=settings.value("fontTitle","Andalus").toString();
 #endif
 
@@ -788,7 +789,7 @@ bool Print::zipUpubDocument()
 {
 
 
-#ifdef   Q_WS_WIN
+#ifdef   Q_OS_WIN
     QProcess prosses;
        QString pathToAdd="  \""+ui->lineEdit->text()+"/"+m_bookTitle+"/*\"";
 

@@ -7,7 +7,7 @@ DESTDIR = ../usr/share/elkirtasse/plugins
 HEADERS += \ 
     cdromshamila.h \
     dialogcdrom.h
-     QT += xml sql
+     QT += xml sql widgets
 SOURCES += \ 
     cdromshamila.cpp \
     dialogcdrom.cpp

@@ -28,6 +28,8 @@
 ****************************************************************************/
 #ifndef BOOKSINTERFACE_H
 #define BOOKSINTERFACE_H
+
+#include <QTreeWidget>
 #include <QObject>
 #include <QtGui>
 

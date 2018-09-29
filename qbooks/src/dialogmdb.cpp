@@ -48,7 +48,11 @@ Dialogmdb::Dialogmdb(QWidget *parent)
   ui->progressBar->setVisible(false);
 
 //    m_path=QCoreApplication::applicationDirPath ();
- m_path=QDir::homePath()+"/.kirtasse";
+#ifdef Q_OS_HAIKU
+	m_path=QDir::homePath()+"/config/settings/elkirtasse";
+#else
+	m_path=QDir::homePath()+"/.kirtasse";
+#endif
     Utils::comboCharge(ui->comboBox);
 
   if   ( QSqlDatabase::addDatabase("QODBC").isValid())

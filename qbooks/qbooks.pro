@@ -1,7 +1,10 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-09-04T23:38:07
 # -------------------------------------------------
-QT += xml
+
+
+QT += core gui widgets printsupport xml sql
+
 TEMPLATE = app
 CONFIG += qt \
     release

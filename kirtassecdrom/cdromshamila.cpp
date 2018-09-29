@@ -30,7 +30,7 @@
 #include "dialogcdrom.h"
 #include "ui_Dialogcdrom.h"
 #include <QMessageBox>
-#ifdef   Q_WS_WIN
+#ifdef   Q_OS_WIN
 #include <QtSql>
 #endif
 QString cdromShamila::execPlugin()
@@ -40,12 +40,19 @@ QString cdromShamila::execPlugin()
 
     QDir dir;
     QString h=dir.homePath();
-
+#ifdef Q_OS_HAIKU
+    if (!dir.exists(h+"/config/settings/elkirtasse/temp")) //التاكد من وجود مجلد المكتبة
+    {
+        dir.mkdir( h+"/config/settings/elkirtasse/temp");
+    }
+		m_tempDir=QDir::homePath()+"/config/settings/elkirtasse/temp";
+#else
     if (!dir.exists(h+"/.kirtasse/temp")) //التاكد من وجود مجلد المكتبة
     {
         dir.mkdir( h+"/.kirtasse/temp");
     }
     m_tempDir=QDir::homePath()+"/.kirtasse/temp";
+#endif
 //    QProcess prosses;
 //    prosses.execute(QString("mkdir -p %1").arg("\""+m_tempDir+"\""));
 
@@ -61,7 +68,7 @@ QString cdromShamila::execPlugin()
 m_mdbExportConv=dlg->mdbExportConv;
         ///execution
 
-#ifdef   Q_WS_WIN
+#ifdef   Q_OS_WIN
         if (creatShamellaWin()==true){
             if(QFile::exists(QDir::homePath()+"/.kirtasse/data/group.xml.old"))
                 QFile::remove(QDir::homePath()+"/.kirtasse/data/group.xml.old") ;
@@ -71,17 +78,22 @@ m_mdbExportConv=dlg->mdbExportConv;
             return m_pathBooksNew;
 
         }
+#elif defined(Q_OS_HAIKU)
+		if (creatShamellaX()==true){
+            if(QFile::exists(QDir::homePath()+"/config/settings/elkirtasse/data/group.xml.old"))
+                QFile::remove(QDir::homePath()+"/config/settings/elkirtasse/data/group.xml.old") ;
+
+            QFile::rename(QDir::homePath()+"/config/settings/elkirtasse/data/group.xml",QDir::homePath()+"/config/settings/elkirtasse/data/group.xml.old");
+            QFile::copy(m_tempDir+"/0cat.xml",QDir::homePath()+"/config/settings/elkirtasse/data/group.xml");
+            return m_pathBooksNew;
 #else
-
-
-        if (creatShamellaX()==true){
+		if (creatShamellaX()==true){
             if(QFile::exists(QDir::homePath()+"/.kirtasse/data/group.xml.old"))
                 QFile::remove(QDir::homePath()+"/.kirtasse/data/group.xml.old") ;
 
             QFile::rename(QDir::homePath()+"/.kirtasse/data/group.xml",QDir::homePath()+"/.kirtasse/data/group.xml.old");
             QFile::copy(m_tempDir+"/0cat.xml",QDir::homePath()+"/.kirtasse/data/group.xml");
             return m_pathBooksNew;
-
         }
 #endif
 
@@ -91,7 +103,7 @@ m_mdbExportConv=dlg->mdbExportConv;
 }
 
 //************************win************************//
-#ifdef   Q_WS_WIN
+#ifdef   Q_OS_WIN
 bool cdromShamila:: creatShamellaWin()
 {
 

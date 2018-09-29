@@ -34,7 +34,7 @@ bool DialogImportDvd::unzipFile(QString fileGz,QString file)
     connect(process,SIGNAL(readyReadStandardOutput()),this,SLOT(readstdout()));
     connect(process,SIGNAL(readyReadStandardError()),this,SLOT(readsteror()));
 
-#ifdef   Q_WS_WIN
+#ifdef   Q_OS_WIN
     QString tempfile=QDir::homePath()+"/.kirtasse/temp";
     process->setWorkingDirectory(QApplication::applicationDirPath());
     QString extar="7z e \""+fileGz + "\" -o\""+tempfile+"\" *.tar -y ";
@@ -55,7 +55,11 @@ bool DialogImportDvd::unzipFile(QString fileGz,QString file)
 
     if (!process->waitForFinished())
         return false;
-    QString tempDir=QDir::homePath()+"/.kirtasse/temp";
+#ifdef	Q_OS_HAIKU
+	QString tempDir=QDir::homePath()+"/config/settings/elkirtasse/temp";
+#else
+	QString tempDir=QDir::homePath()+"/.kirtasse/temp";
+#endif
            QDir dirS(tempDir);
            QString subfile;
            QFile filetemp;
@@ -262,8 +266,13 @@ void DialogImportDvd::on_buttonBox_clicked(QAbstractButton *button)
 
 
                 QString gPathGroupAllbook=m_pathApp +"/data/group.xml";
-                QString groupPath=QDir::homePath()+"/.kirtasse/data/group.xml";
-                QString groupPathNew=QDir::homePath()+"/.kirtasse/data/group.xml.old";
+	#ifdef Q_OS_HAIKU
+				QString groupPath=QDir::homePath()+"/config/settings/elkirtasse/group.xml";
+				QString groupPathNew=QDir::homePath()+"/config/settings/elkirtasse/group.xml.old";
+	#else
+				QString groupPath=QDir::homePath()+"/.kirtasse/data/group.xml";
+				QString groupPathNew=QDir::homePath()+"/.kirtasse/data/group.xml.old";
+	#endif
                 QFile file;
                 if(file.exists(groupPathNew))
                     file.remove(groupPathNew);
@@ -296,9 +305,13 @@ return;
 void DialogImportDvd::on_checkBoxGroup_toggled(bool checked)
 {
     if(checked){
-        QMessageBox::information(0,"",trUtf8("سيتم حذف فائمة الكتب وستفقد كل التغييرات \n"
+#ifdef Q_OS_HAIKU
+				QMessageBox::information(0,"",trUtf8("سيتم حذف فائمة الكتب وستفقد كل التغييرات \n"
+                                             "سيتم نسخ القائمة القديمة الى \n  ")+QDir::homePath()+"/config/settings/elkirtasse/group.xml.old");
+#else
+		QMessageBox::information(0,"",trUtf8("سيتم حذف فائمة الكتب وستفقد كل التغييرات \n"
                                              "سيتم نسخ القائمة القديمة الى \n  ")+QDir::homePath()+"/.kirtasse/data/group.xml.old");
-
+#endif
     }
 }
 

@@ -57,5 +57,7 @@ QString networkplugin::pluginTitle()
 }
 
 //! [2]
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(kirtassenet, networkplugin);
+#endif
 //! [2]
