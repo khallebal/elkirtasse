@@ -1,23 +1,23 @@
-# elkirtasse
-مكتبة القرطاس برنامج مجاني مفتوح تعمل على جميع أنظمة التشغيل لينكس او وندوز أو ماك تتيح لك مطالعة الكتب و تحريرها كما يمكنك إضافة كتب جديدة
+Elkirtasse Library is a free program that runs on all Linux,
+Windows or Mac operating systems. It allows you to read and edit books.
+You can also add new books
 
-إمكانية تنزيل الكتب من مستودع على الأنترنت
-إمكانية تحويل كتب المكتبة الشاملة الموجودة على القرص دفعة واحدة
-إمكانية إستيراد ملفات المكتبة الشاملة bok
-إمكانية إنشاء كتاب فارغ وفهرسته بكل سهولة
-إستيراد مجموعة الكتب المظغوطة لمكتبة القرطاس أو غير المضغوطة·وذلك بتحديد مجموعة الملفات·
-إمكانية تغيير أيقونة كل كتاب على حدآ
-إمكانية تصدير الكتب إلى سيغ ملفات عديدة مثل odf,pdf,epub,html
-إضافة أدوات أخرى (plugin)
-إمكانية الربط بين الصفحات سواء في نفس الكتاب أو مع كتاب آخر
-إمكانيةاستيراد كتب من ملفات نصية او صفحات ويب
-إمكانية اضافة صفحاتك إلى المفضلة وتحريرها
-إمكانية تعديل فهرسة الكتاب
-امكانية تغيير طريقة العرظ من لون وخطوط
-امكانية تغيير سمة البرنامج
-عرض القرءان الكريم بطريقة السور والاجزاء مع امكانية البحث في الايات.
-إمكانية تغيير فهرسة الكتب والمجموعات التي تنتمي إليها
-إمكانية تغيير لغة البرنامج
-إمكانية إظهار وإخفاء التشكيل
-
-text/html
+* The possibility of downloading books from an online repository
+* The possibility of converting the existing  Al shamela library books on disk at once
+* The possibility of importing Al shamela library .bok files
+* Possibility to create an empty book and index it with ease
+* Importing the Compressed Books Collection of the Elkirtasse library
+   or uncompressed by specifying the file collection.
+* You can change the icon of each book individually
+* The possibility of exporting books to file formats such as odf, pdf, epub, html
+* Add other tools (plugin)
+* The ability to link pages in the same book or with another book
+* Ability to import books from text files or web pages
+* Ability to add and edit your pages to bookmarks
+* Ability to modify book indexing
+* Possibility to change the presentation with colors and fonts
+* Ability to change program attribute
+* Presentation of the Quran in a manner of Suras and parts with the possibility of searching verses
+* You can change the indexing of books and the groups to which they belong
+* Ability to change program language
+* Possibility to show and hide ponctuations
