@@ -34,6 +34,7 @@
 #include <QProgressBar>
 #include <QTreeWidget>
 #include <QFile>
+#include <QtPlugin>
 #include "src/booksInterface.h"
 
 /**
