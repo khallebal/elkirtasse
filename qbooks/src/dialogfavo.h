@@ -31,6 +31,7 @@
 #include <QDialog>
 #include <QTreeWidget>
 #include <QIcon>
+#include <QInputDialog>
 namespace Ui
 {
     class dialogfavo;

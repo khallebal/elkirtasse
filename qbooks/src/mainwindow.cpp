@@ -331,9 +331,9 @@ void MainWindow::updateIconEndAction()
 
     lineEditSearchInDoc=new QLineEdit();
     lineEditSearchInDoc->setMaximumWidth(250);
-    AC_lineEditSearchInDoc=new QWidgetAction(this);
-    AC_lineEditSearchInDoc->setDefaultWidget(lineEditSearchInDoc);
-            AC_GoSearchInDoc=new QAction(QIcon(":/images/image/arrow-left.png"),trUtf8("البحث في الصفحة"), this);
+    AC_lineEditSearchInDoc=new QWidgetItem(this);
+    //AC_lineEditSearchInDoc->setDefaultWidget(lineEditSearchInDoc);
+    AC_GoSearchInDoc=new QAction(QIcon(":/images/image/arrow-left.png"),trUtf8("البحث في الصفحة"), this);
     AC_GoSearchInCurBook=new QAction(QIcon(":/images/image/FIN_book.png"),trUtf8("البحث في الكتاب الحالي"), this);
     //**القوائم المنسدلة للكتب السابقة combobox recent**
     for (int i = 0; i < MaxRecentFiles; ++i) {
@@ -580,10 +580,11 @@ void MainWindow::addToolRubonBar(bool rubon)
                 toolRubon->addSeparator();
             }else if (indx==2000){
                 toolRubon->addSeparator();
-                toolRubon->addAction(AC_lineEditSearchInDoc);
+                //blm tau hrs bagaimana mazbrili
+				//toolRubon->addAction(AC_lineEditSearchInDoc);
 
-                toolRubon->addAction(AC_GoSearchInDoc);
-                toolRubon->addAction(AC_GoSearchInCurBook);
+                //toolRubon->addAction(AC_GoSearchInDoc);
+                //toolRubon->addAction(AC_GoSearchInCurBook);
               // toolRubon->addAction(ui->actionFind_all);
 
              //   toolRubon->insertWidget(AC_GoSearchInDoc,lineEditSearchInDoc);
@@ -627,10 +628,11 @@ void MainWindow::addToolRubonBar(bool rubon)
 
     toolRubon->toolFind->addAction(ui->actionFind_all);
     toolRubon->toolFind->addSeparator();
-    toolRubon->toolFind->addAction(AC_lineEditSearchInDoc);
-    toolRubon->toolFind->addAction(AC_GoSearchInDoc);
+	//remark by mazbrili because still confuse
+    //toolRubon->toolFind->addAction(AC_lineEditSearchInDoc);
+   // toolRubon->toolFind->addAction(AC_GoSearchInDoc);
     toolRubon->toolFind->addSeparator();
-    toolRubon->toolFind->addAction(AC_GoSearchInCurBook);
+    //toolRubon->toolFind->addAction(AC_GoSearchInCurBook);
     toolRubon->toolView->addAction(ui->action_fulscreen);
     toolRubon->toolView->addSeparator();
     toolRubon->toolView->addActions(ui->menuDockTooBar->actions());
@@ -1301,12 +1303,10 @@ void MainWindow::on_actionHelp_triggered()
     }
 }
 
-
-// زر ما هذا ؟-----------------------------------
 void MainWindow::on_actionWhatsThis_triggered()
 {
-    QWhatsThis::enterWhatsThisMode();
-}
+	QWhatsThis::enterWhatsThisMode();
+}// زر ما هذا ؟-----------------------------------
 
 // تغير التحديد في شجرة الكتب-----------------------------------
 void MainWindow::on_treeWidget_books_itemSelectionChanged()//تحديد عنصر الكتاب في الشجرة
@@ -2416,7 +2416,7 @@ void MainWindow::showfind(bool isrowat)
         ui->treeWidgetFind->setColumnWidth(1,30);
         ui->treeWidgetFind->setColumnWidth(2,50);
         ui->toolBarFind->setVisible(true);
-        ui->dockWidget_find->setShown(true);
+        ui->dockWidget_find->setVisible(true);
     }
 
 }
@@ -2533,6 +2533,7 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
 
 void MainWindow::on_actionDownloadBooks_triggered()
 {
+	QString tempDirs;
     if(loadPlugin(NET_PLUG)==false)
         return;
 
@@ -2602,10 +2603,10 @@ void MainWindow::on_actionDownloadBooks_triggered()
             QMessageBox::information(this,"",trUtf8("تمت العملية بنجاح \n")+m_pathCostm + "/" + name);
 
 #ifdef Q_OS_HAIKU
-	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
+	tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
     m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
 #else
-	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
+	tempDirs=QDir::homePath()+"/.kirtasse/download/";
 	m_pathUser=QDir::homePath()+"/.kirtasse";
 #endif
 
@@ -2640,11 +2641,12 @@ void MainWindow::on_actionDownloadBooks_triggered()
 
 void MainWindow::on_actionShamilaCdrom_triggered()
 {
+QString tempDirs;	
 #ifdef Q_OS_HAIKU
-	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
+	tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
     m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
 #else
-	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
+	tempDirs=QDir::homePath()+"/.kirtasse/download/";
 	m_pathUser=QDir::homePath()+"/.kirtasse";
 #endif
 
