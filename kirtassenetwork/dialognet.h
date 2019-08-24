@@ -37,6 +37,7 @@
 #include <QAbstractButton>
 #include <QDialog>
 #include <QProcess>
+#include <QPushButton>
 
 namespace Ui {
     class Dialognet;
