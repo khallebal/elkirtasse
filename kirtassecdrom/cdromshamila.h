@@ -28,6 +28,9 @@
 ****************************************************************************/
 #ifndef CDROMSHAMILA_H
 #define CDROMSHAMILA_H
+#include <QProgressDialog>
+#include <QProcess>
+#include <QFontDialog>
 #include "src/booksInterface.h"
 #include <QDomDocument>
 #include <QList>

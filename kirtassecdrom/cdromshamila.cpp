@@ -393,6 +393,7 @@ bool cdromShamila::winWriteBooks(QString fn,QString bookname)
 
 }
  #endif
+ }
 //************************XXXX**********************//
 bool cdromShamila::creatShamellaX()
 {
@@ -902,4 +903,4 @@ bool cdromShamila::saveBookInfo(QString bookname,QString title,QString author,QS
     return true;
 }
 //! [1]
-Q_EXPORT_PLUGIN2(kirtassecdrom, cdromShamila)
+//Q_EXPORT_PLUGIN2(kirtassecdrom, cdromShamila)
