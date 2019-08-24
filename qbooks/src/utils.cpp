@@ -23,6 +23,7 @@ QString Utils::getBookPath(const QString & name,const QString &pathCostm)
 #else
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse/books/";
+#endif	
 qDebug()<<pathApp;
     if(name.startsWith("pdfs")&&name.toLower().endsWith("pdf")){
 
@@ -65,6 +66,7 @@ QDir Utils::getPluginDir()
 #ifdef Q_OS_HAIKU
 	appDir.cd(".");
 	QString m_pathApp=  appDir.absolutePath()+"/";
+	QDir pluginsDir(m_pathApp);
 #else
 	appDir.cdUp();
 	QString m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
@@ -159,7 +161,10 @@ void Utils::treeChargeJozaa(QTreeWidget *view)
     QDir appDir(qApp->applicationDirPath());
 #ifdef Q_OS_HAIKU
 	appDir.cd(".");
-	QString m_pathApp=  appDir.absolutePath()+"/data";
+	//mazbrili change
+	//QString m_pathApp=  appDir.absolutePath()+"/data";
+	//to
+	QString pathApp=  appDir.absolutePath()+"/data";
 	QFile file(pathApp +"/ajzaa.xml");
 #else
     appDir.cdUp();
@@ -212,7 +217,10 @@ void Utils::treeChargeSoura(QTreeWidget *view)
     QDir appDir(qApp->applicationDirPath());
 #ifdef Q_OS_HAIKU
 	appDir.cd(".");
-	QString m_pathApp=  appDir.absolutePath()+"/data";
+	//change by mazbrili
+	//QString m_pathApp=  appDir.absolutePath()+"/data";
+	//to
+	QString pathApp=  appDir.absolutePath()+"/data";
 	QFile file(pathApp +"/curan.xml");
 #else
     appDir.cdUp();
@@ -603,7 +611,10 @@ bool Utils::fahrasSave(QTreeWidget *view, const QString &bkname, const QString &
     QDir appDir(qApp->applicationDirPath());
 #ifdef Q_OS_HAIKU
 	appDir.cd(".");
-	QString m_pathApp=  appDir.absolutePath()+"/data";
+	//mazbrili change
+	//QString m_pathApp=  appDir.absolutePath()+"/data";
+	//into
+	QString pathApp=  appDir.absolutePath()+"/data";
 #else
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";

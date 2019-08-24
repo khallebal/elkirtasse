@@ -37,7 +37,17 @@
 #include "animation.h"
 
 #include <QMainWindow>
+#include <QWhatsThis>
 #include <QPrinter>
+#include <QPrintDialog>
+#include <QAbstractPrintDialog>
+#include <QPrintPreviewDialog>
+#include <QProgressBar>
+#include <QStyleFactory>
+#include <QFileDialog>
+#include <QInputDialog>
+#include <QWidgetAction>
+#include <QProgressDialog>
 
 class QLabel;
 class QTreeWidget;
@@ -103,7 +113,7 @@ private:
     QIcon m_iconbook;
     QIcon m_iconaut;
     QIcon m_iconGroup;
-    QWidgetAction *AC_lineEditSearchInDoc;       /*!< امر يحمل مربع نص اخال البحث */
+    QWidgetItem *AC_lineEditSearchInDoc;       /*!< امر يحمل مربع نص اخال البحث */
     QLineEdit *lineEditSearchInDoc;              /*!< مربع ادخال نص البحث في الصفحة على لوحة الادوات */
     QLineEdit *lineEditFindFah;                  /*!< مربع ادهال نص البحث في الفهارس على لوحة الفهارس */
 

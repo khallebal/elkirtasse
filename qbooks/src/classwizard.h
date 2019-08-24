@@ -29,6 +29,12 @@
 #ifndef CLASSWIZARD_H
 #define CLASSWIZARD_H
 #include <QWizard>
+#include <QLabel>
+#include <QLineEdit>
+#include <QRadioButton>
+#include <QGroupBox>
+#include <QVBoxLayout>
+#include <QGridLayout>
 
 QT_BEGIN_NAMESPACE
 class QCheckBox;

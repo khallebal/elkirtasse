@@ -716,7 +716,8 @@ void TabBook::convertTextToHtml(const QString &txt)//
 {
     QString text=txt;
     //  QLocale::setDefault(QLocale(QLocale::Arabic));
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    //mazbrili disable because not needed 
+    //QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     if(m_arabicNmber==1){
         txtBrowserBook->setLocale(QLocale(QLocale::Latin));
     }else if(m_arabicNmber==2){
@@ -1136,8 +1137,10 @@ void TabBook::serchInPdf(const QString &txt)
 {
      if(!pdfDoc)return;
  //    QRectF rectF;
-     //اذا كان اتجاه النص من اليمين الى اليسار
-    if(QApplication::keyboardInputDirection()==Qt::RightToLeft){
+     //
+     //change by mazbriliاذا كان اتجاه النص من اليمين الى اليسار
+    //if(QApplication::keyboardInputDirection()==Qt::RightToLeft){
+    if(Qt::LayoutDirection()==Qt::RightToLeft){	
         QString str;
         for(int i=txt.length();i>-1;i--){
             str+=txt.mid(i,1);

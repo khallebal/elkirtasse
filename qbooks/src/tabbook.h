@@ -7,6 +7,10 @@
 #include <QWidget>
 #include <QGridLayout>
 #include <QTextBrowser>
+#include <QMenu>
+#include <QInputMethod>
+#include <QMessageBox>
+#include <QInputDialog>
 
 /**
  * @brief The TabBook class خاص بكل كتاب وما يحتاجه من ادوات ومعلومات

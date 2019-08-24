@@ -646,6 +646,7 @@ void DialogConfigBooks::on_toolButtonFindBKOld_clicked()
     //انشاء ق
 #ifdef Q_OS_HAIKU
 	QString groupPath=QDir::homePath()+"/config/settings/elkirtasse/group.xml";
+	QString groupPathOld; //dummy 
 #else
 	QString groupPathOld=QDir::homePath()+"/.kirtasse/data/group.xml.old";
 #endif

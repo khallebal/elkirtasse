@@ -29,6 +29,11 @@
 #ifndef FINDBOOK_H
 #define FINDBOOK_H
 #include <QObject>
+#include <QLabel>
+#include <QAction>
+#include <QApplication>
+#include <QProgressBar>
+#include <QProgressDialog>
 #include <QTreeWidget>
 #include <QDomDocument>
 #include <QXmlStreamReader>

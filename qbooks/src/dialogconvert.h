@@ -29,7 +29,7 @@
 #ifndef DIALOGCONVERT_H
 #define DIALOGCONVERT_H
 #include <QDialog>
-
+#include <QFileDialog>
  #include <QTextEdit>
  #include <QDomDocument>
 namespace Ui

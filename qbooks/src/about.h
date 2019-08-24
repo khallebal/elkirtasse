@@ -29,6 +29,10 @@
 #ifndef ABOUT_H
 #define ABOUT_H
 #include <QDialog>
+#include <QGraphicsWidget>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsEffect>
+
 #include <QtGui>
 
 namespace Ui

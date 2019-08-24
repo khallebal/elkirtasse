@@ -29,6 +29,7 @@
 #ifndef DIALOGADDBOOKS_H
 #define DIALOGADDBOOKS_H
 #include <QDialog>
+#include <QFileDialog>
 #include <QAbstractButton>
 
 namespace Ui

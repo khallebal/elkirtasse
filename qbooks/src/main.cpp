@@ -33,7 +33,7 @@
 #include <QTranslator>
 #include <QLocale>
 #include <QFontDatabase>
-
+#include <QWidgetAction>
 
 int main(int argc, char *argv[])
 {
