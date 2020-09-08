@@ -2643,8 +2643,10 @@ void MainWindow::on_actionShamilaCdrom_triggered()
 {
 QString tempDirs;	
 #ifdef Q_OS_HAIKU
-	tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
-    m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+	//tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
+	tempDirs=QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/download";
+    //m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+	m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 #else
 	tempDirs=QDir::homePath()+"/.kirtasse/download/";
 	m_pathUser=QDir::homePath()+"/.kirtasse";
@@ -2660,7 +2662,7 @@ QString tempDirs;
         return;
 #ifdef Q_OS_HAIKU
 		QMessageBox::information(this,trUtf8("معلومات"),trUtf8("لقد تم تحويل كتب الشاملة بنجاح\n"
-                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها")+QDir::homePath()+trUtf8("/config/settings/elkirtasse/data/group.xml.old\n"
+                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها")+QDir::homePath()+trUtf8("/config/settings/Abouzakaria/elkirtasse/data/group.xml.old\n"
                                                                                      " كما سيتم استخدام المسار التالي للكتب \n"
                                                                                      )+newBooksPath);
 #else

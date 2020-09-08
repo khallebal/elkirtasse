@@ -55,7 +55,8 @@ void TabBook::loadSettings()
 {
     //--------------------------------------------------------------------
 #ifdef  Q_OS_HAIKU
-    QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
+    //QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
+	QSettings  settings(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/setting.ini",QSettings::IniFormat);
 #else
 	QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
 #endif

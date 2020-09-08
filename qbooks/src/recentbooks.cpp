@@ -31,6 +31,7 @@
 #include <QDir>
 #include <QAction>
 #include <QTextStream>
+#include <QStandardPaths>
 RecentBooks::RecentBooks()
 {
 
@@ -48,7 +49,8 @@ void RecentBooks::recentLoad()
                        "<setting>"
                        "</setting>";
 #ifdef Q_OS_HAIKU
-  QString  m_pathUser=QDir::homePath()+"/config/setings/elkirtasse";
+  //QString  m_pathUser=QDir::homePath()+"/config/setings/elkirtasse";
+  QString  m_pathUser=(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
 #else
 	QString  m_pathUser=QDir::homePath()+"/.kirtasse";
 #endif
@@ -127,7 +129,8 @@ void RecentBooks::recentChange(QString Bname,QString Btitle,QString Baut,QString
 void RecentBooks::recentSave()
 {
 #ifdef Q_OS_HAIKU
-  QString  m_pathUser=QDir::homePath()+"/config/setings/elkirtasse";
+  //QString  m_pathUser=QDir::homePath()+"/config/setings/elkirtasse";
+  QString m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 #else
     QString  m_pathUser=QDir::homePath()+"/.kirtasse";
 #endif

@@ -57,7 +57,8 @@ void Print::loadSettings()
 {
     //m_WebFont ; m_WebFontTitle ;m_myStyleName ;
 #ifdef Q_OS_HAIKU
-    QSettings settings(QDir::homePath()+"/boot/home/config/settings/setting.ini",QSettings::IniFormat);
+    //QSettings settings(QDir::homePath()+"/boot/home/config/settings/setting.ini",QSettings::IniFormat);
+    QSettings settings(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/setting.ini",QSettings::IniFormat);
 #else
     QSettings settings(QDir::homePath()+"/.kirtasse//data/setting.ini",QSettings::IniFormat);
 #endif

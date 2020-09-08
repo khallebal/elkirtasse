@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setApplicationName("elkirtasse");
     a.setApplicationVersion("3.7.0");
-    a.setOrganizationName("abouzakaria");
+    a.setOrganizationName("Abouzakaria");
     a.setWindowIcon(QIcon::fromTheme("elkirtasse",QIcon(":/images/image/groopbook")));
 
     //  QIcon icon;
@@ -52,21 +52,28 @@ int main(int argc, char *argv[])
     QDir dir;
     QString h=dir.homePath();
 #ifdef Q_OS_HAIKU
-    if (!dir.exists(h+"/config/settings/elkirtasse")) //التاكد من وجود مجلد المكتبة
-    {
-        dir.mkdir( h+"/config/settings/elkirtasse");
+    //if (!dir.exists(h+"/config/settings/elkirtasse")) //التاكد من وجود مجلد المكتبة
+    if(!dir.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)))
+	{
+        dir.mkdir( QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
     }
-    if (!dir.exists(h+"/config/settings/elkirtasse/data")) //التاكد من وجود مجلد البياات
-    {
-        dir.mkdir( h+"/config/settings/elkirtasse/data");
+//    if (!dir.exists(h+"/config/settings/elkirtasse/data")) //التاكد من وجود مجلد البياات
+    if(!dir.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data"))
+   {
+        //dir.mkdir( h+"/config/settings/elkirtasse/data");
+		dir.mkdir(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data");
     }
-    if (!dir.exists(h+"/config/settings/elkirtasse/books")) //التاكد من وجود مجلد الكتاب
-    {
-        dir.mkdir( h+"/config/settings/elkirtasse/books");
+   // if (!dir.exists(h+"/config/settings/elkirtasse/books")) //التاكد من وجود مجلد الكتاب
+    if(!dir.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/books"))
+	{
+       // dir.mkdir( h+"/config/settings/elkirtasse/books");
+	   dir.mkdir(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/books");
     }
-    if (!dir.exists(h+"/config/settings/elkirtasse/download")) //التاكد من وجود مجلد مؤقت
-    {
-        dir.mkdir( h+"/config/settings/elkirtasse/download");
+    //if (!dir.exists(h+"/config/settings/elkirtasse/download")) //التاكد من وجود مجلد مؤقت
+     if(!dir.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/download"))
+	{
+        //dir.mkdir( h+"/config/settings/elkirtasse/download");
+		dir.mkdir(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/download");
 	}
 #else
     if (!dir.exists(h+"/.kirtasse")) //التاكد من وجود مجلد المكتبة
@@ -95,12 +102,19 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_HAIKU
 	appDir.cd(".");
 	QString pathApp=  appDir.absolutePath()+"/data";
-	if (!file.exists(h+"/config/settings/elkirtasse/data/group.xml")){
-        file.copy(pathApp+"/data/group.xml",h +"/config/settings/elkirtasse/data/group.xml");
-    }
-    if (!file.exists(h+"/config/settings/elkirtasse/data/bookslist.xml")){
-        file.copy(pathApp+"/data/bookslist.xml",h +"/config/settings/elkirtasse/data/bookslist.xml");
-    }
+	//if (!file.exists(h+"/config/settings/elkirtasse/data/group.xml"))
+	 if(!file.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data/group.xml"))
+	{
+     //   file.copy(pathApp+"/data/group.xml",h +"/config/settings/elkirtasse/data/group.xml");
+	 qDebug()<<"copy file group.xml";
+      file.copy(pathApp+"/group.xml",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data/group.xml");
+	}
+    //if (!file.exists(h+"/config/settings/elkirtasse/data/bookslist.xml"))
+	 if(!file.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data/bookslist.xml"))
+	{
+    //file.copy(pathApp+"/data/bookslist.xml",h +"/config/settings/elkirtasse/data/bookslist.xml");
+    file.copy(pathApp+"/data/group.xml",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data/bookslist.xml");
+	}
 #else
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
@@ -126,7 +140,8 @@ int main(int argc, char *argv[])
     if (translatorsys->load(translatorFileName, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         a.installTranslator(translatorsys);
 #ifdef Q_OS_HAIKU
-    QSettings settings(h+"/config/settings/elkirtasse/setting.ini",QSettings::IniFormat);
+    //QSettings settings(h+"/config/settings/elkirtasse/setting.ini",QSettings::IniFormat);
+	QSettings settings(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/setting.ini",QSettings::IniFormat);	
 #else
 	QSettings settings(h+"/.kirtasse/data/setting.ini",QSettings::IniFormat);
 #endif

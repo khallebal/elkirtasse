@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QSettings>
+#include <QStandardPaths>
 DialogActions::DialogActions(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DialogActions)
@@ -73,8 +74,9 @@ void DialogActions::on_buttonBox_accepted()
         listActToAdd.append(ui->treeWidgetDest->topLevelItem(i)->data(1,1));
     }
 #ifdef Q_OS_HAIKU
-		QSettings settings(QDir::homePath()+"/config/settings/elkirtasse/setting.ini",
-                       QSettings::IniFormat);
+		//QSettings settings(QDir::homePath()+"/config/settings/elkirtasse/setting.ini",
+         //              QSettings::IniFormat);
+		QSettings  settings(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/setting.ini",QSettings::IniFormat);
 #else
 	QSettings settings(QDir::homePath()+"/.kirtasse/data/setting.ini",
                        QSettings::IniFormat);

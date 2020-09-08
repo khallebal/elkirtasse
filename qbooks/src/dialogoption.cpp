@@ -66,7 +66,8 @@ void Dialogoption::loadSettings()//load layou
     QStringList styles;
     styles << trUtf8("النظام") <<QStyleFactory::keys() ;
 #ifdef Q_OS_HAIKU
-	QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+	//QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+	QString m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 	QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
 #else
 	QString m_pathUser=QDir::homePath()+"/.kirtasse";
@@ -168,7 +169,8 @@ void Dialogoption::loadSettings()//load layou
 void Dialogoption::saveSettings()//حفظ البيانات الى ملف
 {
 #ifdef Q_OS_HAIKU
-	QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+	//QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
+	QString m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 	QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
 #else
     QString m_pathUser=QDir::homePath()+"/.kirtasse/data";
