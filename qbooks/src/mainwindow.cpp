@@ -2491,11 +2491,8 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
         return;
 
     QString distPath;
-#ifdef Q_OS_HAIKU
-	QString dwnldPath=QDir::homePath()+"/config/settings/elkirtasse/download/";
-#else
-	QString dwnldPath=QDir::homePath()+"/.kirtasse/download/";
-#endif
+        QString dwnldPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+
 
     if(file.exists(QDir::homePath()+dwnldPath+name+"/bookinfo.info")){
        distPath=QDir::homePath()+dwnldPath+name;
@@ -2518,13 +2515,10 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
     }
     if(filex.exists(m_pathCostm+ "/" + name+"/book.xml"))
         QMessageBox::information(this,"",trUtf8("تمت العملية بنجاح \n")+m_pathCostm + "/" + name);
-#ifdef Q_OS_HAIKU
-	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
-    m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
-	m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+
+        QString tempDirs=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+        m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
 
     Utils::removeTempDirs(QDir::homePath()+tempDirs);
 
@@ -2545,11 +2539,9 @@ void MainWindow::on_actionDownloadBooks_triggered()
  qDebug()<<"recevier -------------------------------------"<<targzName;
        if (targzName.isEmpty())
         return;
-#ifdef Q_OS_HAIKU
-    QString tarGzPath=QDir::homePath()+"/config/settings/download/"+targzName;
-#else
-	QString tarGzPath=QDir::homePath()+"/.kirtasse/download/"+targzName;
-#endif
+
+        QString tarGzPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/"+targzName;
+
     qDebug()<<"chemain download + targz nam----------------------------"<<tarGzPath;
 
     QFile file;
@@ -2566,11 +2558,9 @@ void MainWindow::on_actionDownloadBooks_triggered()
 
      QString name=targzName.remove(".tar.gz");
      QString distPath;
-#ifdef Q_OS_HAIKU
-	QString dwnldPath=QDir::homePath()+"/config/settings/elkirtasse/download/";
-#else
-	QString dwnldPath=QDir::homePath()+"/.kirtasse/download/";
-#endif
+
+     QString dwnldPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+
 
      if(file.exists(QDir::homePath()+dwnldPath+name+"/bookinfo.info")){
         distPath=QDir::homePath()+dwnldPath+name;
@@ -2602,13 +2592,9 @@ void MainWindow::on_actionDownloadBooks_triggered()
         if(file.exists(m_pathCostm+ "/" + name+"/book.xml"))
             QMessageBox::information(this,"",trUtf8("تمت العملية بنجاح \n")+m_pathCostm + "/" + name);
 
-#ifdef Q_OS_HAIKU
-	tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
-    m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	tempDirs=QDir::homePath()+"/.kirtasse/download/";
-	m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+
+        tempDirs=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+        m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
         Utils::removeTempDirs(QDir::homePath()+tempDirs);
         QTreeWidgetItem *item=Utils::getItemByBook(ui->treeWidget_books,name);
@@ -2642,15 +2628,10 @@ void MainWindow::on_actionDownloadBooks_triggered()
 void MainWindow::on_actionShamilaCdrom_triggered()
 {
 QString tempDirs;	
-#ifdef Q_OS_HAIKU
-	//tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
-	tempDirs=QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/download";
-    //m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-	m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-#else
-	tempDirs=QDir::homePath()+"/.kirtasse/download/";
-	m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+
+        tempDirs=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+        m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
 
 	Utils::removeTempDirs(QDir::homePath()+tempDirs);
 
@@ -2660,17 +2641,12 @@ QString tempDirs;
 
     if(newBooksPath.isEmpty())
         return;
-#ifdef Q_OS_HAIKU
-		QMessageBox::information(this,trUtf8("معلومات"),trUtf8("لقد تم تحويل كتب الشاملة بنجاح\n"
-                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها")+QDir::homePath()+trUtf8("/config/settings/Abouzakaria/elkirtasse/data/group.xml.old\n"
-                                                                                     " كما سيتم استخدام المسار التالي للكتب \n"
-                                                                                     )+newBooksPath);
-#else
+
 	QMessageBox::information(this,trUtf8("معلومات"),trUtf8("لقد تم تحويل كتب الشاملة بنجاح\n"
-                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها")+QDir::homePath()+trUtf8("/.kirtasse/data/group.xml.old\n"
+                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها")+QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+trUtf8("/data/group.xml.old\n"
                                                                                      " كما سيتم استخدام المسار التالي للكتب \n"
                                                                                      )+newBooksPath);
-#endif
+
 
     m_pathCostm=newBooksPath;
     chargeGroupe();

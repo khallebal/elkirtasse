@@ -44,11 +44,8 @@ mdbexport::mdbexport(QWidget *parent)
 
     Utils::comboCharge(ui->comboBox);
     ui->progressBar->setVisible(false);
-#ifdef Q_OS_HAIKU
-    m_tempDir=QDir::homePath()+"/config/settings/elkirtasse/temp";
-#else
-	m_tempDir=QDir::homePath()+"/.kirtasse/temp";
-#endif
+    m_tempDir=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/temp";
+
     QProcess prosses;
     prosses.execute(QString("mkdir -p %1").arg("\""+m_tempDir+"\""));
 }

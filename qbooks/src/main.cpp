@@ -34,15 +34,20 @@
 #include <QLocale>
 #include <QFontDatabase>
 #include <QWidgetAction>
+#include <QStandardPaths>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    #ifdef Q_OS_HAIKU
+    a.setApplicationName("Elkirtasse");
+    #else
     a.setApplicationName("elkirtasse");
+    #endif
     a.setApplicationVersion("3.7.0");
     a.setOrganizationName("Abouzakaria");
     a.setWindowIcon(QIcon::fromTheme("elkirtasse",QIcon(":/images/image/groopbook")));
-
+    qDebug() << "test debug";
     //  QIcon icon;
     QPixmap pixmap(":/images/image/titlekirtasse.png");
     QSplashScreen splash(pixmap);
@@ -51,78 +56,46 @@ int main(int argc, char *argv[])
     a.processEvents();
     QDir dir;
     QString h=dir.homePath();
-#ifdef Q_OS_HAIKU
-    //if (!dir.exists(h+"/config/settings/elkirtasse")) //التاكد من وجود مجلد المكتبة
-    if(!dir.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)))
-	{
-        dir.mkdir( QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
-    }
-//    if (!dir.exists(h+"/config/settings/elkirtasse/data")) //التاكد من وجود مجلد البياات
-    if(!dir.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data"))
-   {
-        //dir.mkdir( h+"/config/settings/elkirtasse/data");
-		dir.mkdir(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data");
-    }
-   // if (!dir.exists(h+"/config/settings/elkirtasse/books")) //التاكد من وجود مجلد الكتاب
-    if(!dir.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/books"))
-	{
-       // dir.mkdir( h+"/config/settings/elkirtasse/books");
-	   dir.mkdir(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/books");
-    }
-    //if (!dir.exists(h+"/config/settings/elkirtasse/download")) //التاكد من وجود مجلد مؤقت
-     if(!dir.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/download"))
-	{
-        //dir.mkdir( h+"/config/settings/elkirtasse/download");
-		dir.mkdir(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/download");
-	}
-#else
-    if (!dir.exists(h+"/.kirtasse")) //التاكد من وجود مجلد المكتبة
-    {
-        dir.mkdir( h+"/.kirtasse");
-    }
-    if (!dir.exists(h+"/.kirtasse/data")) //التاكد من وجود مجلد البياات
-    {
-        dir.mkdir( h+"/.kirtasse/data");
-    }
-    if (!dir.exists(h+"/.kirtasse/books")) //التاكد من وجود مجلد الكتاب
-    {
-        dir.mkdir( h+"/.kirtasse/books");
-    }
-    if (!dir.exists(h+"/.kirtasse/download")) //التاكد من وجود مجلد مؤقت
-    {
-        dir.mkdir( h+"/.kirtasse/download");
-	}
-#endif
-//    if (!dir.exists(h+"/.fonts")) //التاكد من وجود مجلد مؤقت
-//    {
-//        dir.mkdir( h+"/.fonts");
-//    }
+    //Create Data Path
+    auto data_path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    qDebug() << "QStandardPaths::ApplicatonsLocation =" +QStandardPaths::StandardLocation(QStandardPaths::ApplicationsLocation);
+    qDebug() << "data-path"+data_path;
+    if (!QDir(data_path).exists()) {
+    	QDir().mkpath(data_path);
+    	}
+    //data path
+    if (!QDir(data_path).exists(data_path+"/data")) {
+    	QDir().mkpath(data_path+"/data");
+    	}
+    
+    //books path
+    if (!QDir(data_path).exists(data_path+"/books")) {
+    	QDir().mkpath(data_path+"/books");
+    	}
+    //download path	
+    if (!QDir(data_path).exists(data_path+"/download")) {
+    	QDir().mkpath(data_path+"/download");
+    	}
+
     QFile file;
     QDir appDir(QCoreApplication::applicationDirPath() );
 #ifdef Q_OS_HAIKU
 	appDir.cd(".");
-	QString pathApp=  appDir.absolutePath()+"/data";
-	//if (!file.exists(h+"/config/settings/elkirtasse/data/group.xml"))
-	 if(!file.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data/group.xml"))
-	{
-     //   file.copy(pathApp+"/data/group.xml",h +"/config/settings/elkirtasse/data/group.xml");
-	 qDebug()<<"copy file group.xml";
-      file.copy(pathApp+"/group.xml",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data/group.xml");
-	}
-    //if (!file.exists(h+"/config/settings/elkirtasse/data/bookslist.xml"))
-	 if(!file.exists(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data/bookslist.xml"))
-	{
-    //file.copy(pathApp+"/data/bookslist.xml",h +"/config/settings/elkirtasse/data/bookslist.xml");
-    file.copy(pathApp+"/data/group.xml",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/data/bookslist.xml");
-	}
+        QString pathApp=  appDir.absolutePath();
+	if (!file.exists(data_path+"/data/group.xml")){
+        file.copy(pathApp+"/data/group.xml",data_path+"/data/group.xml");
+    }
+    if (!file.exists(data_path+"/data/bookslist.xml")){
+        file.copy(pathApp+"/data/bookslist.xml",data_path+"/data/bookslist.xml");
+    }
 #else
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-    if (!file.exists(h+"/.kirtasse/data/group.xml")){
-        file.copy(pathApp+"/data/group.xml",h +"/.kirtasse/data/group.xml");
+    if (!file.exists(data_path+"/data/group.xml")){
+        file.copy(pathApp+"/data/group.xml",data_path+"/data/group.xml");
     }
-    if (!file.exists(h+"/.kirtasse/data/bookslist.xml")){
-        file.copy(pathApp+"/data/bookslist.xml",h +"/.kirtasse/data/bookslist.xml");
+    if (!file.exists(data_path+"/data/bookslist.xml")){
+        file.copy(pathApp+"/data/bookslist.xml",data_path+"data/bookslist.xml");
     }
 #endif
 //    if (!file.exists(h+"/.fonts/trado.ttf")){
@@ -139,12 +112,7 @@ int main(int argc, char *argv[])
     QTranslator *translatorsys = new QTranslator(&a);
     if (translatorsys->load(translatorFileName, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         a.installTranslator(translatorsys);
-#ifdef Q_OS_HAIKU
-    //QSettings settings(h+"/config/settings/elkirtasse/setting.ini",QSettings::IniFormat);
-	QSettings settings(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/setting.ini",QSettings::IniFormat);	
-#else
-	QSettings settings(h+"/.kirtasse/data/setting.ini",QSettings::IniFormat);
-#endif
+    QSettings settings(data_path+"/data/setting.ini",QSettings::IniFormat);
     settings.beginGroup("MainWindow");
     int lng=settings.value("lng",0).toInt();
 

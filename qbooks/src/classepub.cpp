@@ -9,8 +9,9 @@
 #include <QProcess>
 #include <QTextStream>
 #include <QSettings>
- #include <QApplication>
+#include <QApplication>
 #include <QDebug>
+#include <QStandardPaths>
 classepub::classepub()
 {
 
@@ -21,11 +22,7 @@ bool classepub::ebubUnzip(QString fileName)
 {
   //  QDir::homePath()+"/.kirtasse/download"
 	QDir dir;
-#ifdef Q_OS_HAIKU
-	QString pathToExtract=QDir::homePath()+"/config/settings/elkirtasse/download/epub";
-#else
-	QString pathToExtract=QDir::homePath()+"/.kirtasse/download/epub";
-#endif
+        QString pathToExtract=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/epub";
 	dir.mkdir(pathToExtract);
 	QProcess prosses;
 
@@ -49,7 +46,7 @@ bool classepub::ebubUnzip(QString fileName)
     }
     prosses.waitForFinished();
 
-    ebubOpenContainer(QDir::homePath()+"/config/settings/elkirtasse/download/epub");
+    ebubOpenContainer(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/epub");
     curentPage=1;
 #else
     if(QFile::exists("/usr/bin/7z")){
@@ -61,7 +58,7 @@ bool classepub::ebubUnzip(QString fileName)
     }
     prosses.waitForFinished();
 
-    ebubOpenContainer(QDir::homePath()+"/.kirtasse/download/epub");
+    ebubOpenContainer(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/epub");
     curentPage=1;
 
     return true;
@@ -239,11 +236,9 @@ QString  tocName;
     QDomElement racine2 = m_doc.documentElement(); //
     int count=racine2.childNodes().count();
 //---------------------------------
-#ifdef Q_OS_HAIKU
-    QFile fileX(QDir::homePath()+"/config/settings/elkirtasse/download/book.xml");
-#else
-	QFile fileX(QDir::homePath()+"/.kirtasse/download/book.xml");
-#endif
+
+    QFile fileX(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/book.xml");
+
     if (!fileX.open(QFile::WriteOnly | QFile::Text)) {
         return ;
     }
@@ -477,11 +472,9 @@ int count=    item.childNodes().count();
 
 void classepub::epubCreatIndex()
 {
-#ifdef Q_OS_HAIKU
-    QFile fileX(QDir::homePath()+"/config/settings/elkirtasse/download/title.xml");
-#else
-    QFile fileX(QDir::homePath()+"/.kirtasse/download/title.xml");
-#endif
+
+    QFile fileX(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/title.xml");
+
     if (!fileX.open(QFile::WriteOnly | QFile::Text)) {
         return ;
     }

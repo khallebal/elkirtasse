@@ -26,13 +26,12 @@ TabBook::TabBook(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose,true);
 
     DataBook=new databook();
+    m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 #ifdef Q_OS_HAIKU
-	m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
     QDir appDir(qApp->applicationDirPath());
     appDir.cd(".");
     m_pathApp=  appDir.absolutePath()+"/data";
 #else
-     m_pathUser=QDir::homePath()+"/.kirtasse";
     QDir appDir(qApp->applicationDirPath());
     appDir.cdUp();
     m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
@@ -60,8 +59,7 @@ void TabBook::loadSettings()
 {
     //--------------------------------------------------------------------
 #ifdef Q_OS_HAIKU
-    //QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
-	QSettings settings(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/setting.ini",QSettings::IniFormat);
+    QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
 #else
     QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
 #endif
