@@ -18,13 +18,8 @@ QString Utils::getBookPath(const QString & name,const QString &pathCostm)
 {
 
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-    appDir.cd(".");
-    QString pathApp=  appDir.absolutePath()+"/books/";
-#else
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse/books/";
-#endif	
 qDebug()<<pathApp;
     if(name.startsWith("pdfs")&&name.toLower().endsWith("pdf")){
 
@@ -64,15 +59,10 @@ qDebug()<<pathApp;
 QDir Utils::getPluginDir()
 {
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-        QString m_pathApp=  appDir.absolutePath()+"/lib";
-	QDir pluginsDir(m_pathApp);
-#else
 	appDir.cdUp();
 	QString m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     QDir pluginsDir(m_pathApp);
-#endif
+
 #if defined(Q_OS_MAC)
     if (pluginsDir.dirName() == "MacOS") {
         pluginsDir.cdUp();
@@ -155,18 +145,11 @@ void Utils::treeChargeJozaa(QTreeWidget *view)
     QTreeWidgetItem *osloItem=new QTreeWidgetItem(item) ;
     QTreeWidgetItem *osloItem2 ;
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-	//mazbrili change
-	//QString m_pathApp=  appDir.absolutePath()+"/data";
-	//to
-	QString pathApp=  appDir.absolutePath()+"/data";
-	QFile file(pathApp +"/ajzaa.xml");
-#else
+
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     QFile file(pathApp +"/data/ajzaa.xml");
-#endif
+
     file.open(QIODevice::ReadOnly);
     view->clear();
     QXmlStreamReader xml;
@@ -211,18 +194,11 @@ void Utils::treeChargeSoura(QTreeWidget *view)
     QTreeWidgetItem *itemsora=new QTreeWidgetItem(view);
     QTreeWidgetItem *itemaya ;
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-	//change by mazbrili
-	//QString m_pathApp=  appDir.absolutePath()+"/data";
-	//to
-	QString pathApp=  appDir.absolutePath()+"/data";
-	QFile file(pathApp +"/curan.xml");
-#else
+
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     QFile file(pathApp +"/data/curan.xml");
-#endif
+
     file.open(QIODevice::ReadOnly);
 
     view->clear();
@@ -589,16 +565,9 @@ bool Utils::treeSaveGroupe(QTreeWidget *view)
 bool Utils::fahrasSave(QTreeWidget *view, const QString &bkname, const QString &pathCostum)
 {
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-	//mazbrili change
-	//QString m_pathApp=  appDir.absolutePath()+"/data";
-	//into
-	QString pathApp=  appDir.absolutePath()+"/data";
-#else
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-#endif
+
     QFile file;
     QString path;
     if(file.exists(pathCostum+"/" +bkname+"/title.xml")){
@@ -1174,11 +1143,9 @@ bool Utils::saveBookInfo(const QString &bookname,const QString &title,
                          const QString &pathCostum)
 {
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-#else
+
     appDir.cdUp();
-#endif
+
    // QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     QFile file;
     QString path;

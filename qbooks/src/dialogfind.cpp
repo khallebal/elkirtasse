@@ -123,11 +123,8 @@ noHamza=ui->checkBoxHamza->isChecked();
             return;
         }
 
-#ifdef Q_OS_HAIKU
-        QString path=QDir::homePath()+"/config/settings/elkirtasse/";
-#else
-		QString path=QDir::homePath()+"/.kirtasse/data/";
-#endif
+        QString path=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/data/";
+
         QFile file(path+"find.xml");
         file.open(QIODevice::WriteOnly);              //فتح الملف للكتابة عليها
         QTextStream out(&file);                       //الكتابة
@@ -174,13 +171,9 @@ void Dialogfind::on_treeWidget_itemChanged(QTreeWidgetItem* item, int )
             QString mydata=item->data(1,1).toString();
             QFile file;
             QDir appDir(qApp->applicationDirPath());
-#if defined(Q_OS_HAIKU)
-			appDir.cd(".");
-			QString pathApp=  appDir.absolutePath()+"/data";
-#else
             appDir.cdUp();
             QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-#endif
+
             if (file.exists(bookPath+"/"+mydata+"/book.xml")){
                 item->setData(2,2,"user");
             }else if(file.exists(pathApp+"/books/"+mydata+"/book.xml")){

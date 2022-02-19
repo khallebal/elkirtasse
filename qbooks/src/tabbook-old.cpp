@@ -21,15 +21,11 @@ TabBook::TabBook(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose,true);
 
     DataBook=new databook();
-	m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-	QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-    appDir.cd(".");
-    m_pathApp=  appDir.absolutePath()+"/data";
-#else
+    m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir appDir(qApp->applicationDirPath());
     appDir.cdUp();
     m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-#endif
+
     txtBrowserBook = new QTextBrowser(this);
     treeViewFahras =new QTreeWidget;
 
@@ -52,7 +48,7 @@ TabBook::~TabBook()
 void TabBook::loadSettings()
 {
     //--------------------------------------------------------------------
-	QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
+    QSettings settings(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/data/setting.ini",QSettings::IniFormat);
     settings.beginGroup("MainWindow");
     bool isCadre=settings.value("WebCadre",true).toBool();
     QString cadreFolder=settings.value("CadrFolder","default").toString();
@@ -103,16 +99,11 @@ void TabBook::ceatCadre(const QString &cadreFolder, bool isCadre)
          txtBrowserBook->setFrameShape(QFrame::Panel);
          return;
     }
-        QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-    appDir.cd(".");
-    m_pathApp=  appDir.absolutePath()+"/data";
-    QString imgPath=m_pathApp+"/images/"+cadreFolder;
-#else
+    QDir appDir(qApp->applicationDirPath());
     appDir.cdUp();
     m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     QString imgPath=m_pathApp+"/data/images/"+cadreFolder;
-#endif
+
     if(cadreFolder==trUtf8("الافتراضي")){
         imgPath=":/images/image";
     }else{

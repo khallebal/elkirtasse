@@ -36,13 +36,9 @@
 #include <QMessageBox>
 #include<QtGui>
 
-#ifdef Q_OS_HAIKU
-	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
-	QString tempFile=QDir::homePath()+"/config/settings/elkirtasse/download/";
-#else
-	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
-	QString tempFile=QDir::homePath()+"/.kirtasse/download/";
-#endif
+    QString tempDirs=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+    QString tempFile=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+
 
 DialogAddBooks::DialogAddBooks(QWidget *parent)
     : QDialog(parent), ui(new Ui::DialogAddBooks)

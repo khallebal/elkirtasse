@@ -34,6 +34,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QStandardPaths>
 
 DialogConfigBooks::DialogConfigBooks(QWidget *parent) :
     QDialog(parent),
@@ -65,11 +66,7 @@ ui->toolButtonReloadAll->setIcon(QIcon(style()->standardPixmap(QStyle::SP_Browse
 
     }
     ui->comboBoxSection->setCurrentIndex(-1);
-#ifdef Q_OS_HAIKU
-		ui->lineEditGroup->setText(QDir::homePath()+"/config/settings/elkirtasse/group.xml");
-#else
-		ui->lineEditGroup->setText(QDir::homePath()+"/.kirtasse/data/group.xml");
-#endif
+    ui->lineEditGroup->setText(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/data/group.xml");
 }
 
 DialogConfigBooks::~DialogConfigBooks()
@@ -510,13 +507,8 @@ QString homeDir=QDir::homePath () ;
     if (!fn.isEmpty())
     {
 
-#ifdef Q_OS_HAIKU
-		QString groupPath=QDir::homePath()+"/config/settings/elkirtasse/group.xml";
-		QString groupPathNew=QDir::homePath()+"/config/settings/elkirtasse/group.xml.old";
-#else
-        QString groupPath=QDir::homePath()+"/.kirtasse/data/group.xml";
-        QString groupPathNew=QDir::homePath()+"/.kirtasse/data/group.xml.old";
-#endif
+        QString groupPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/group.xml";
+        QString groupPathNew=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/group.xml.old";
         QFile file;
         if(file.exists(groupPathNew))
             file.remove(groupPathNew);
@@ -535,13 +527,8 @@ QString homeDir=QDir::homePath () ;
 
 void DialogConfigBooks::on_toolButtonGroupUpdat_clicked()
 {
-#ifdef Q_OS_HAIKU
-	QString groupPath=QDir::homePath()+"/config/settings/elkirtasse/group.xml";
-	QString groupPathOld=QDir::homePath()+"/config/settings/elkirtasse/group.xml.old";
-#else
-    QString groupPath=QDir::homePath()+"/.kirtasse/data/group.xml";
-    QString groupPathOld=QDir::homePath()+"/.kirtasse/data/group.xml.old";
-#endif
+    QString groupPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/group.xml";
+    QString groupPathOld=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/group.xml.old";
     QFile file;
     if(file.exists(groupPathOld)){
         if(file.exists(groupPath))
@@ -552,14 +539,9 @@ void DialogConfigBooks::on_toolButtonGroupUpdat_clicked()
                ui->lineEditGroup->setText(groupPath);
     }else{
         QDir appDir(QCoreApplication::applicationDirPath() );
-#ifdef Q_OS_HAIKU
-		appDir.cd(".");
-		QString pathApp=  appDir.absolutePath()+"/data";
-#else
         appDir.cdUp();
         QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-#endif
-          file.copy(pathApp+"/data/group.xml",groupPath);
+        file.copy(pathApp+"/data/group.xml",groupPath);
     }
 ui->toolButtonGroupUpdat->setEnabled(false);
 }
@@ -644,12 +626,9 @@ void DialogConfigBooks::on_toolButtonFindBKOld_clicked()
     QString newBkPath=dir;
     qDebug()<<newBkPath;
     //انشاء ق
-#ifdef Q_OS_HAIKU
-	QString groupPath=QDir::homePath()+"/config/settings/elkirtasse/group.xml";
-	QString groupPathOld; //dummy 
-#else
-	QString groupPathOld=QDir::homePath()+"/.kirtasse/data/group.xml.old";
-#endif
+    QString groupPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/group.xml";
+    QString groupPathOld=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/group.xml.old";
+
     QFile file;
     if(file.exists(groupPathOld))
                  file.remove(groupPathOld);
@@ -657,14 +636,9 @@ void DialogConfigBooks::on_toolButtonFindBKOld_clicked()
         file.rename(groupPath,groupPathOld);
 //نسخ الاصلية الى دليل المنزل
         QDir appDir(QCoreApplication::applicationDirPath() );
-#ifdef Q_OS_HAIKU
-		appDir.cd(".");
-		QString pathApp=  appDir.absolutePath()+"/data";
-#else
         appDir.cdUp();
         QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-#endif
-          file.copy(pathApp+"/data/group.xml",groupPath);
+        file.copy(pathApp+"/data/group.xml",groupPath);
 //تحميل القائمة الى الشجرة
      Utils::treeChargeGroupe( ui->treeWidgetBooks,0,true);
  //اضافة قسم جديد فارغ

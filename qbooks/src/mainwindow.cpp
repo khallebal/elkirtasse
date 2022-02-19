@@ -75,13 +75,9 @@ MainWindow::MainWindow(QWidget *parent)
 #endif
 
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-	m_pathApp=  appDir.absolutePath()+"/data";
-#else
     appDir.cdUp();
     m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-#endif
+
 
     m_treeGroupIsModified=false;
 
@@ -1991,13 +1987,9 @@ void MainWindow::chargeGroupe()//تحميل شجرة الكتب
 
 void MainWindow::saveLayou()//حفظ البيانات الى ملف
 {
-#ifdef Q_OS_HAIKU
-	QSettings settings(m_pathUser+"/setting.ini",
-                       QSettings::IniFormat);
-#else
     QSettings settings(m_pathUser+"/data/setting.ini",
                        QSettings::IniFormat);
-#endif
+
     settings.beginGroup("MainWindow");
 
     settings.setValue("geo_data", saveGeometry());
@@ -2022,11 +2014,9 @@ void MainWindow::loadLayout()//load layou
                                              "01000000020000000300000016006d00610069006e0054006f006f006c0042006100720100000000ffffffff00000000000000000000"
                                              "00220074006f006f006c004200610072005f006e006100760065006700610074006f00720100000203ffffffff000000000000000000"
                                              "00001a0074006f006f006c0042006100720072006500630065006e007401000002a9ffffffff0000000000000000)");
-#ifdef Q_OS_HAIKU
-	QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
-#else
+
     QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
-#endif
+
     settings.beginGroup("MainWindow");
 
     this->restoreGeometry(settings.value("geo_data").toByteArray());
@@ -2039,11 +2029,9 @@ void MainWindow::loadLayout()//load layou
 void MainWindow::loadSettings()
 {
 
-#ifdef Q_OS_HAIKU
-	QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
-#else
+
     QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
-#endif
+
     settings.beginGroup("MainWindow");
 
     QString   m_myStyleName=settings.value("style","").toString();
@@ -2476,11 +2464,8 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
     QString targzName= netInterface->loadFile(idurl);
     if (targzName.isEmpty())
         return;
-#ifdef Q_OS_HAIKU
-    QString orgPath=QDir::homePath()+"/config/settings/elkirtasse/download/"+targzName;
-#else
-    QString orgPath=QDir::homePath()+"/.kirtasse/download/"+targzName;
-#endif
+
+    QString orgPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/"+targzName;
 
     QFile filex;
     if(!filex.exists(orgPath)){

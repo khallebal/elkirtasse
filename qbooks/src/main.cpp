@@ -79,16 +79,7 @@ int main(int argc, char *argv[])
 
     QFile file;
     QDir appDir(QCoreApplication::applicationDirPath() );
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-        QString pathApp=  appDir.absolutePath();
-	if (!file.exists(data_path+"/data/group.xml")){
-        file.copy(pathApp+"/data/group.xml",data_path+"/data/group.xml");
-    }
-    if (!file.exists(data_path+"/data/bookslist.xml")){
-        file.copy(pathApp+"/data/bookslist.xml",data_path+"/data/bookslist.xml");
-    }
-#else
+
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     if (!file.exists(data_path+"/data/group.xml")){
@@ -97,7 +88,7 @@ int main(int argc, char *argv[])
     if (!file.exists(data_path+"/data/bookslist.xml")){
         file.copy(pathApp+"/data/bookslist.xml",data_path+"data/bookslist.xml");
     }
-#endif
+
 //    if (!file.exists(h+"/.fonts/trado.ttf")){
 //        file.copy(pathApp+"/data/font/trado.ttf",h +"/.fonts/trado.ttf");
 //    }
