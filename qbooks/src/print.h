@@ -29,6 +29,12 @@
 #ifndef PRINT_H
 #define PRINT_H
 #include <QDialog>
+#include <QPrinter>
+#include <QTextEdit>
+#include <QAbstractButton>
+#include <QFileDialog>
+
+
 #include "databook.h"
 #include <QTreeWidget>
 #include <QDomDocument>

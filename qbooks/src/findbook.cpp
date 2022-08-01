@@ -33,12 +33,8 @@
 
 findbook::findbook()
 {
-#ifdef Q_OS_HAIKU
-    m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
 
+QString m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     resultCount=0;
     isFindRuned=false;
     findToList=false;
@@ -130,13 +126,8 @@ void findbook::findInAllBook(bool inPages)  //بحث في مجموعة كتب
             bookpath=pathCostum+"/"  + findName;
         }else{
             QDir appDir(qApp->applicationDirPath());
-#if defined(Q_OS_HAIKU)
-		appDir.cd(".");
-		QString pathApp=  appDir.absolutePath()+"/data";
-#else
             appDir.cdUp();
             QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-#endif
             bookpath=pathApp+"/books/"+ findName;
         }
         if( inPages==true){

@@ -75,13 +75,9 @@ MainWindow::MainWindow(QWidget *parent)
 #endif
 
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-	m_pathApp=  appDir.absolutePath()+"/data";
-#else
     appDir.cdUp();
     m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-#endif
+
 
     m_treeGroupIsModified=false;
 
@@ -331,9 +327,9 @@ void MainWindow::updateIconEndAction()
 
     lineEditSearchInDoc=new QLineEdit();
     lineEditSearchInDoc->setMaximumWidth(250);
-    AC_lineEditSearchInDoc=new QWidgetAction(this);
-    AC_lineEditSearchInDoc->setDefaultWidget(lineEditSearchInDoc);
-            AC_GoSearchInDoc=new QAction(QIcon(":/images/image/arrow-left.png"),trUtf8("البحث في الصفحة"), this);
+    AC_lineEditSearchInDoc=new QWidgetItem(this);
+    //AC_lineEditSearchInDoc->setDefaultWidget(lineEditSearchInDoc);
+    AC_GoSearchInDoc=new QAction(QIcon(":/images/image/arrow-left.png"),trUtf8("البحث في الصفحة"), this);
     AC_GoSearchInCurBook=new QAction(QIcon(":/images/image/FIN_book.png"),trUtf8("البحث في الكتاب الحالي"), this);
     //**القوائم المنسدلة للكتب السابقة combobox recent**
     for (int i = 0; i < MaxRecentFiles; ++i) {
@@ -580,10 +576,11 @@ void MainWindow::addToolRubonBar(bool rubon)
                 toolRubon->addSeparator();
             }else if (indx==2000){
                 toolRubon->addSeparator();
-                toolRubon->addAction(AC_lineEditSearchInDoc);
+                //blm tau hrs bagaimana mazbrili
+				//toolRubon->addAction(AC_lineEditSearchInDoc);
 
-                toolRubon->addAction(AC_GoSearchInDoc);
-                toolRubon->addAction(AC_GoSearchInCurBook);
+                //toolRubon->addAction(AC_GoSearchInDoc);
+                //toolRubon->addAction(AC_GoSearchInCurBook);
               // toolRubon->addAction(ui->actionFind_all);
 
              //   toolRubon->insertWidget(AC_GoSearchInDoc,lineEditSearchInDoc);
@@ -627,10 +624,11 @@ void MainWindow::addToolRubonBar(bool rubon)
 
     toolRubon->toolFind->addAction(ui->actionFind_all);
     toolRubon->toolFind->addSeparator();
-    toolRubon->toolFind->addAction(AC_lineEditSearchInDoc);
-    toolRubon->toolFind->addAction(AC_GoSearchInDoc);
+	//remark by mazbrili because still confuse
+    //toolRubon->toolFind->addAction(AC_lineEditSearchInDoc);
+   // toolRubon->toolFind->addAction(AC_GoSearchInDoc);
     toolRubon->toolFind->addSeparator();
-    toolRubon->toolFind->addAction(AC_GoSearchInCurBook);
+    //toolRubon->toolFind->addAction(AC_GoSearchInCurBook);
     toolRubon->toolView->addAction(ui->action_fulscreen);
     toolRubon->toolView->addSeparator();
     toolRubon->toolView->addActions(ui->menuDockTooBar->actions());
@@ -1301,12 +1299,10 @@ void MainWindow::on_actionHelp_triggered()
     }
 }
 
-
-// زر ما هذا ؟-----------------------------------
 void MainWindow::on_actionWhatsThis_triggered()
 {
-    QWhatsThis::enterWhatsThisMode();
-}
+	QWhatsThis::enterWhatsThisMode();
+}// زر ما هذا ؟-----------------------------------
 
 // تغير التحديد في شجرة الكتب-----------------------------------
 void MainWindow::on_treeWidget_books_itemSelectionChanged()//تحديد عنصر الكتاب في الشجرة
@@ -1991,13 +1987,9 @@ void MainWindow::chargeGroupe()//تحميل شجرة الكتب
 
 void MainWindow::saveLayou()//حفظ البيانات الى ملف
 {
-#ifdef Q_OS_HAIKU
-	QSettings settings(m_pathUser+"/setting.ini",
-                       QSettings::IniFormat);
-#else
     QSettings settings(m_pathUser+"/data/setting.ini",
                        QSettings::IniFormat);
-#endif
+
     settings.beginGroup("MainWindow");
 
     settings.setValue("geo_data", saveGeometry());
@@ -2022,11 +2014,9 @@ void MainWindow::loadLayout()//load layou
                                              "01000000020000000300000016006d00610069006e0054006f006f006c0042006100720100000000ffffffff00000000000000000000"
                                              "00220074006f006f006c004200610072005f006e006100760065006700610074006f00720100000203ffffffff000000000000000000"
                                              "00001a0074006f006f006c0042006100720072006500630065006e007401000002a9ffffffff0000000000000000)");
-#ifdef Q_OS_HAIKU
-	QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
-#else
+
     QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
-#endif
+
     settings.beginGroup("MainWindow");
 
     this->restoreGeometry(settings.value("geo_data").toByteArray());
@@ -2039,11 +2029,9 @@ void MainWindow::loadLayout()//load layou
 void MainWindow::loadSettings()
 {
 
-#ifdef Q_OS_HAIKU
-	QSettings settings(m_pathUser+"/setting.ini",QSettings::IniFormat);
-#else
+
     QSettings settings(m_pathUser+"/data/setting.ini",QSettings::IniFormat);
-#endif
+
     settings.beginGroup("MainWindow");
 
     QString   m_myStyleName=settings.value("style","").toString();
@@ -2416,7 +2404,7 @@ void MainWindow::showfind(bool isrowat)
         ui->treeWidgetFind->setColumnWidth(1,30);
         ui->treeWidgetFind->setColumnWidth(2,50);
         ui->toolBarFind->setVisible(true);
-        ui->dockWidget_find->setShown(true);
+        ui->dockWidget_find->setVisible(true);
     }
 
 }
@@ -2476,11 +2464,8 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
     QString targzName= netInterface->loadFile(idurl);
     if (targzName.isEmpty())
         return;
-#ifdef Q_OS_HAIKU
-    QString orgPath=QDir::homePath()+"/config/settings/elkirtasse/download/"+targzName;
-#else
-    QString orgPath=QDir::homePath()+"/.kirtasse/download/"+targzName;
-#endif
+
+    QString orgPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/"+targzName;
 
     QFile filex;
     if(!filex.exists(orgPath)){
@@ -2491,11 +2476,8 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
         return;
 
     QString distPath;
-#ifdef Q_OS_HAIKU
-	QString dwnldPath=QDir::homePath()+"/config/settings/elkirtasse/download/";
-#else
-	QString dwnldPath=QDir::homePath()+"/.kirtasse/download/";
-#endif
+        QString dwnldPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+
 
     if(file.exists(QDir::homePath()+dwnldPath+name+"/bookinfo.info")){
        distPath=QDir::homePath()+dwnldPath+name;
@@ -2518,13 +2500,10 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
     }
     if(filex.exists(m_pathCostm+ "/" + name+"/book.xml"))
         QMessageBox::information(this,"",trUtf8("تمت العملية بنجاح \n")+m_pathCostm + "/" + name);
-#ifdef Q_OS_HAIKU
-	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
-    m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
-	m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+
+        QString tempDirs=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+        m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
 
     Utils::removeTempDirs(QDir::homePath()+tempDirs);
 
@@ -2533,6 +2512,7 @@ qDebug()<<name<<"idurl=--------------------------"<<idurl;
 
 void MainWindow::on_actionDownloadBooks_triggered()
 {
+	QString tempDirs;
     if(loadPlugin(NET_PLUG)==false)
         return;
 
@@ -2544,11 +2524,9 @@ void MainWindow::on_actionDownloadBooks_triggered()
  qDebug()<<"recevier -------------------------------------"<<targzName;
        if (targzName.isEmpty())
         return;
-#ifdef Q_OS_HAIKU
-    QString tarGzPath=QDir::homePath()+"/config/settings/download/"+targzName;
-#else
-	QString tarGzPath=QDir::homePath()+"/.kirtasse/download/"+targzName;
-#endif
+
+        QString tarGzPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/"+targzName;
+
     qDebug()<<"chemain download + targz nam----------------------------"<<tarGzPath;
 
     QFile file;
@@ -2565,11 +2543,9 @@ void MainWindow::on_actionDownloadBooks_triggered()
 
      QString name=targzName.remove(".tar.gz");
      QString distPath;
-#ifdef Q_OS_HAIKU
-	QString dwnldPath=QDir::homePath()+"/config/settings/elkirtasse/download/";
-#else
-	QString dwnldPath=QDir::homePath()+"/.kirtasse/download/";
-#endif
+
+     QString dwnldPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+
 
      if(file.exists(QDir::homePath()+dwnldPath+name+"/bookinfo.info")){
         distPath=QDir::homePath()+dwnldPath+name;
@@ -2601,13 +2577,9 @@ void MainWindow::on_actionDownloadBooks_triggered()
         if(file.exists(m_pathCostm+ "/" + name+"/book.xml"))
             QMessageBox::information(this,"",trUtf8("تمت العملية بنجاح \n")+m_pathCostm + "/" + name);
 
-#ifdef Q_OS_HAIKU
-	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
-    m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
-	m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+
+        tempDirs=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+        m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
         Utils::removeTempDirs(QDir::homePath()+tempDirs);
         QTreeWidgetItem *item=Utils::getItemByBook(ui->treeWidget_books,name);
@@ -2640,13 +2612,11 @@ void MainWindow::on_actionDownloadBooks_triggered()
 
 void MainWindow::on_actionShamilaCdrom_triggered()
 {
-#ifdef Q_OS_HAIKU
-	QString tempDirs=QDir::homePath()+"/config/settings/elkirtasse/download/";
-    m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	QString tempDirs=QDir::homePath()+"/.kirtasse/download/";
-	m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+QString tempDirs;	
+
+        tempDirs=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download/";
+        m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
 
 	Utils::removeTempDirs(QDir::homePath()+tempDirs);
 
@@ -2656,17 +2626,12 @@ void MainWindow::on_actionShamilaCdrom_triggered()
 
     if(newBooksPath.isEmpty())
         return;
-#ifdef Q_OS_HAIKU
-		QMessageBox::information(this,trUtf8("معلومات"),trUtf8("لقد تم تحويل كتب الشاملة بنجاح\n"
-                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها")+QDir::homePath()+trUtf8("/config/settings/elkirtasse/data/group.xml.old\n"
-                                                                                     " كما سيتم استخدام المسار التالي للكتب \n"
-                                                                                     )+newBooksPath);
-#else
+
 	QMessageBox::information(this,trUtf8("معلومات"),trUtf8("لقد تم تحويل كتب الشاملة بنجاح\n"
-                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها")+QDir::homePath()+trUtf8("/.kirtasse/data/group.xml.old\n"
+                                                           "كما تم اعادة تسمية القائمة السابقة في المسار التالي اذا احتجت لاسترجاعها")+QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+trUtf8("/data/group.xml.old\n"
                                                                                      " كما سيتم استخدام المسار التالي للكتب \n"
                                                                                      )+newBooksPath);
-#endif
+
 
     m_pathCostm=newBooksPath;
     chargeGroupe();

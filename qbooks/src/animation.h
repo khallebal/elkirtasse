@@ -31,8 +31,13 @@
 
 #include <QtGui>
 #include <QObject>
+#include <QLabel>
+#include <QAction>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
 #include <QGraphicsWidget>
-
+#include <QGraphicsView>
+#include <QGraphicsDropShadowEffect>
 /**
  * @brief The Pixmap class فئة خاصة بالايقونات التي تعرض في المشهد المتحرك
  */
@@ -113,7 +118,7 @@ private:
  *  \date      2010-2014
  *  \copyright GNU Public License.
  */
-class View : public QGraphicsView
+class View : public QGraphicsView 
 {
     Q_OBJECT
 public:

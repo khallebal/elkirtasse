@@ -47,12 +47,8 @@ Dialogmdb::Dialogmdb(QWidget *parent)
     ui->toolButton_fileNam->setIcon(style()->standardPixmap(QStyle::SP_DirOpenIcon));
   ui->progressBar->setVisible(false);
 
-//    m_path=QCoreApplication::applicationDirPath ();
-#ifdef Q_OS_HAIKU
-	m_path=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	m_path=QDir::homePath()+"/.kirtasse";
-#endif
+//    m_path=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    m_path=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     Utils::comboCharge(ui->comboBox);
 
   if   ( QSqlDatabase::addDatabase("QODBC").isValid())

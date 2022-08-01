@@ -9,6 +9,7 @@
 #include <QTextDocument>
 #include <QTextCursor>
 #include <QDebug>
+#include <QStandardPaths>
 
 Utils::Utils()
 {
@@ -17,10 +18,6 @@ QString Utils::getBookPath(const QString & name,const QString &pathCostm)
 {
 
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-    appDir.cd(".");
-    QString pathApp=  appDir.absolutePath()+"/books/";
-#else
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse/books/";
 qDebug()<<pathApp;
@@ -62,14 +59,10 @@ qDebug()<<pathApp;
 QDir Utils::getPluginDir()
 {
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-	QString m_pathApp=  appDir.absolutePath()+"/";
-#else
 	appDir.cdUp();
 	QString m_pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     QDir pluginsDir(m_pathApp);
-#endif
+
 #if defined(Q_OS_MAC)
     if (pluginsDir.dirName() == "MacOS") {
         pluginsDir.cdUp();
@@ -95,12 +88,7 @@ QDir Utils::getPluginDir()
 void Utils::favoriteCharge(QTreeWidget *view, const QIcon &icong, const QIcon &iconf)
 {
     //    QString path=QCoreApplication::applicationDirPath ();
-#ifdef Q_OS_HAIKU
-    QString path=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	QString path=QDir::homePath()+"/.kirtasse";
-#endif
-
+    QString path=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDomDocument doc;
     QString myxmlfavorite="<?xml version='1.0' encoding='UTF-8'?>"
                           "<dataroot>"
@@ -157,15 +145,11 @@ void Utils::treeChargeJozaa(QTreeWidget *view)
     QTreeWidgetItem *osloItem=new QTreeWidgetItem(item) ;
     QTreeWidgetItem *osloItem2 ;
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-	QString m_pathApp=  appDir.absolutePath()+"/data";
-	QFile file(pathApp +"/ajzaa.xml");
-#else
+
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     QFile file(pathApp +"/data/ajzaa.xml");
-#endif
+
     file.open(QIODevice::ReadOnly);
     view->clear();
     QXmlStreamReader xml;
@@ -210,15 +194,11 @@ void Utils::treeChargeSoura(QTreeWidget *view)
     QTreeWidgetItem *itemsora=new QTreeWidgetItem(view);
     QTreeWidgetItem *itemaya ;
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-	QString m_pathApp=  appDir.absolutePath()+"/data";
-	QFile file(pathApp +"/curan.xml");
-#else
+
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     QFile file(pathApp +"/data/curan.xml");
-#endif
+
     file.open(QIODevice::ReadOnly);
 
     view->clear();
@@ -251,11 +231,7 @@ void Utils::treeChargeSoura(QTreeWidget *view)
 //! تحميل قائمة الكتب
 void Utils::treeChargeGroupe(QTreeWidget *view,int checked,bool asCombobox,QComboBox *comboGroup)
 {
-#ifdef Q_OS_HAIKU
-    QString path=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-    QString path=QDir::homePath()+"/.kirtasse";
-#endif
+    QString path=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QTreeWidgetItem *itemRoot= new QTreeWidgetItem(view);
     QTreeWidgetItem *itemGroup= new QTreeWidgetItem(itemRoot);
     QTreeWidgetItem *itemBook;
@@ -448,11 +424,7 @@ QTreeWidgetItem* Utils::getItem(QTreeWidgetItem *item)
 void Utils::comboCharge(QComboBox *combo)
 {
     QDomDocument docCombo;
-#ifdef Q_OS_HAIKU
-    QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-    QString m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+    QString m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QFile file(m_pathUser +"/data/group.xml");
 
     file.open(QIODevice::ReadOnly);
@@ -489,11 +461,7 @@ void Utils::comboCharge(QComboBox *combo)
 //!
 void Utils::favoriteSave(QTreeWidget *view)
 {
-#ifdef Q_OS_HAIKU
-    QString pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-     QString  pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+    QString pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QString myxmlfavorite="<?xml version='1.0' encoding='UTF-8'?>"
                           "<dataroot>"
                           "</dataroot>";
@@ -537,11 +505,7 @@ void Utils::favoriteSave(QTreeWidget *view)
 //!
 bool Utils::treeSaveGroupe(QTreeWidget *view)
 {
-#ifdef Q_OS_HAIKU
-    QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	QString  m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+    QString m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QString myxmlgroup="<?xml version='1.0' encoding='UTF-8'?>"
                        "<setting>"
                        "</setting>";
@@ -601,13 +565,9 @@ bool Utils::treeSaveGroupe(QTreeWidget *view)
 bool Utils::fahrasSave(QTreeWidget *view, const QString &bkname, const QString &pathCostum)
 {
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-	QString m_pathApp=  appDir.absolutePath()+"/data";
-#else
     appDir.cdUp();
     QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
-#endif
+
     QFile file;
     QString path;
     if(file.exists(pathCostum+"/" +bkname+"/title.xml")){
@@ -689,11 +649,7 @@ void Utils::writeInDoc(QString tit,QString data,QString lvl,QDomDocument doc)
 //! حذف الكتاب المحدد
 bool Utils::treeMenuRemoveBook(const QString &BKname,bool removall,const QString &pathCostum)
 {
-#ifdef Q_OS_HAIKU
-    QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-    QString m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+    QString m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QFile file(m_pathUser +"/data/group.xml");
     file.open(QIODevice::ReadOnly);
     QDomDocument m_doc;
@@ -761,11 +717,8 @@ bool Utils::treeMenuRemoveBook(const QString &BKname,bool removall,const QString
 //التحقق كم زجزد الكتاب
 bool Utils::checkBookExist(QString BKname)
 {
-#ifdef Q_OS_HAIKU
-    QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	QString m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+
+    QString m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QFile file(m_pathUser +"/data/group.xml");
     file.open(QIODevice::ReadOnly);
     QDomDocument m_doc;
@@ -828,12 +781,7 @@ QTreeWidgetItem *Utils::getItemByBook(QTreeWidget *view,const QString &dirName)
 //!
 QString Utils::getUrlInBookList(const QString &dirName)
 {
-#ifdef Q_OS_HAIKU
-    QString path=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-    QString path=QDir::homePath()+"/.kirtasse";
-#endif
-
+    QString path=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QFile file(path+"/data/bookslist.xml");
     if(!file.exists()){
 
@@ -876,11 +824,7 @@ QString Utils::getUrlInBookList(const QString &dirName)
 //!
 void Utils::treeUpdateGroupe(QTreeWidget *view,bool remove,const QString &pathCostum)
 {
-#ifdef Q_OS_HAIKU
-    QString path=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-    QString path=QDir::homePath()+"/.kirtasse";
-#endif
+    QString path=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QTreeWidgetItem *itemRoot= new QTreeWidgetItem(view);
     QTreeWidgetItem *itemGroup= new QTreeWidgetItem(itemRoot);
     QTreeWidgetItem *itemBook;
@@ -979,11 +923,8 @@ bool Utils::addNewBook(const QString &bkpath,const QString &bktitle,
                        const QString &bkauth,const QString &bkbetaka,
                        const QString &groupid ,bool cheked)
 {
-#ifdef Q_OS_HAIKU
-    QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	QString m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+
+    QString m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QFile file(m_pathUser +"/data/group.xml");
     if (bkpath.isEmpty()){return false;}
     //  if (!filepath.exists()){return false;}
@@ -1144,11 +1085,8 @@ QString Utils::geniratNewBookName(QString groupParent)
 {
 
     QList<QString> list;
-#ifdef Q_OS_HAIKU
-    QString m_pathUser=QDir::homePath()+"/config/settings/elkirtasse";
-#else
-	QString m_pathUser=QDir::homePath()+"/.kirtasse";
-#endif
+
+    QString m_pathUser=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QFile file(m_pathUser +"/data/group.xml");
     file.open(QIODevice::ReadOnly);
      QDomDocument m_doc;
@@ -1205,11 +1143,9 @@ bool Utils::saveBookInfo(const QString &bookname,const QString &title,
                          const QString &pathCostum)
 {
     QDir appDir(qApp->applicationDirPath());
-#ifdef Q_OS_HAIKU
-	appDir.cd(".");
-#else
+
     appDir.cdUp();
-#endif
+
    // QString pathApp=  appDir.absolutePath()+"/share/elkirtasse";
     QFile file;
     QString path;
@@ -1301,11 +1237,7 @@ bool Utils::loadTarGz(QString path)
 {
     //verifier
     QProcess prosses;
-#ifdef Q_OS_HAIKU
-    QString pathToExtract=QDir::homePath()+"/config/settings/elkirtasse/download";
-#else
-    QString pathToExtract=QDir::homePath()+"/.kirtasse/download";
-#endif
+    QString pathToExtract=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/download";
     QProgressDialog progress(QObject::trUtf8("الرجاء الانتظار...."), QObject::trUtf8("الغاء"), 0, 0, 0);
     progress.setWindowModality(Qt::WindowModal);
     progress.setEnabled(false);

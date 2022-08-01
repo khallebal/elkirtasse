@@ -3,8 +3,7 @@ TEMPLATE    = subdirs
 SUBDIRS	    = qbooks \
 	      kirtassenetwork \
               kirtasserowat \
-              kirtassecdrom\
-              kirtassepdf
+              kirtassecdrom 
 #! [0]
 
 TRANSLATIONS    =usr/share/elkirtasse/translat/kirtasse_fr.ts \
@@ -84,4 +83,4 @@ CODECFORTR = UTF-8
         translat_en\
         translat_fr\
         listbook
-
+		

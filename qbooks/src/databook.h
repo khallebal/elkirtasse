@@ -34,6 +34,7 @@
 #include <QDomDocument>
 #include <QtGui>
 #include <QStackedWidget>
+#include <QProgressDialog>
 
 /**
  * @brief The databook class قاعدة التعامل مع بيانات الكتاب

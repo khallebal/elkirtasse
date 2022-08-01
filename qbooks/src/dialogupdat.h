@@ -29,6 +29,7 @@
 #ifndef DIALOGUPDAT_H
 #define DIALOGUPDAT_H
 #include <QDialog>
+#include <QFileDialog>
 
 namespace Ui
 {

@@ -2,6 +2,7 @@
 #define DIALOGACTIONS_H
 
 #include <QDialog>
+#include <QAction>
 #include <QTreeWidgetItem>
 namespace Ui {
     class DialogActions;

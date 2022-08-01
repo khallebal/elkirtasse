@@ -29,6 +29,10 @@
 #ifndef DIALOGOPTION_H
 #define DIALOGOPTION_H
 #include <QDialog>
+#include <QFileDialog>
+#include <QFontDialog>
+#include <QColorDialog>
+#include <QStyleFactory>
 
 //#include <QAbstractButton>
 namespace Ui
